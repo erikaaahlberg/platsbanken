@@ -13,6 +13,7 @@ fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?lanid=1&si
 	})
 }
 
+
 function displayAdHeading(adHeadings) {
    	const headingOutput = document.getElementById('headingOutput');
 	for(let i = 0; i < adHeadings.matchningslista.matchningdata.length; i++){
@@ -30,6 +31,8 @@ function displayAdHeading(adHeadings) {
     headingOutput.insertAdjacentHTML('beforeend', adHeadingContainer);
 	}
 }
+
+
 
 
 /* HERMAN */
