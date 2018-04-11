@@ -32,7 +32,6 @@ function fetchSpecificAd(adID) {
 }
 
 function displaySpecificAd(object) {
-    console.log(object);
     const mainOutput = document.getElementById('mainOutput');
     const adContainer = `
         <div id="adContainer">
@@ -57,6 +56,8 @@ function getAdFromURL() {
     fetchSpecificAd(url);
 }
 
-getAdFromURL();
+if (location.search.split('jobAd=')[1]) {
+    getAdFromURL()
+}
 
 /* HERMAN */
