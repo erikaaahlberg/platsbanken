@@ -57,6 +57,7 @@ function fetchSpecificAd(adID) {
 }
 
 function displaySpecificAd(object) {
+    console.log(object);
     const mainOutput = document.getElementById('mainOutput');
     const adContainer = `
         <div id="adContainer">
@@ -71,9 +72,20 @@ function displaySpecificAd(object) {
             <p>Omfattning: ${object.platsannons.villkor.arbetstid}</p>
             <p>Lön: ${object.platsannons.villkor.lonetyp}</p>
             <p>Dela: ${window.location.href}</p>
+            <button id="saveAdd${object.platsannons.annons.annonsid}" value="${object.platsannons.annons.annonsid}">
+            Spara annons</button>
         </div>
     `;
     mainOutput.innerHTML = adContainer;
+    
+    const saveAddButton = document.getElementById(`saveAdd${object.platsannons.annons.annonsid}`);
+    saveAddButton.addEventListener('click', function(event){
+        event.preventDefault();
+        
+        console.log("hej");
+        console.log(this.value);
+    });
+    
 }
 
 function getAdFromURL() {
