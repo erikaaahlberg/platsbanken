@@ -49,7 +49,9 @@ function fetchSpecificAd(adID) {
     fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${adID}`)
     .then((response) => response.json())
     .then((json) => {
-        displaySpecificAd(json);
+        
+         displaySpecificAd(json);
+   
     })
     .catch((error) => {
         console.log(error);
@@ -111,5 +113,29 @@ function saveAdToLocalStorage(id){
 const showSavedAdsButton = document.getElementById('showSavedAds');
 showSavedAdsButton.addEventListener('click', function(event){
     event.preventDefault();
-    console.log("hej"); 
+    displaySavedAds();
 });
+
+
+
+
+/* This displaySavedAds-function is under construction: */
+function displaySavedAds(){
+    console.log("Wow! Visa sparade annonser-button works!")
+    
+    /* Getting array of saved adID's from local storage: */
+    savedAds = JSON.parse(localStorage.getItem('savedAds'));
+    
+    /* Looping out IDs */
+    for(let i = 0; i < savedAds.length; i++){
+        let adID = savedAds[i];
+        
+        console.log('Sparat annonsid:', adID);
+        
+        
+        /* BUT WHAT WILL HAPPEN NEXT? :O */
+        //fetchSpecificAd(adID, 'savedView');
+    }  
+}
+
+
