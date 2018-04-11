@@ -100,13 +100,16 @@ if (location.search.split('jobAd=')[1]) {
 
 var savedAds = [];
 function saveAdToLocalStorage(id){
-
     if(!localStorage.getItem('savedAds')){
         localStorage.setItem('savedAds', JSON.stringify(savedAds));
     }
-
     savedAds = JSON.parse(localStorage.getItem('savedAds'));
     savedAds.push(id);
     localStorage.setItem('savedAds', JSON.stringify(savedAds)); 
-
 }
+
+const showSavedAdsButton = document.getElementById('showSavedAds');
+showSavedAdsButton.addEventListener('click', function(event){
+    event.preventDefault();
+    console.log("hej"); 
+});
