@@ -1,4 +1,6 @@
-getAdHeadings();
+if (!location.search.split('jobAd=')[1]) {
+    getAdHeadings();
+}
 
 
 function getAdHeadings() {
@@ -25,7 +27,7 @@ function displayAdHeading(adHeadings) {
             <p>Sista ansökningsdag: ${adHeadings.matchningslista.matchningdata[i].sista_ansokningsdag}</p>
             <p>Yrke: ${adHeadings.matchningslista.matchningdata[i].yrkesbenamning}</p>
             <p>Anställningstyp: ${adHeadings.matchningslista.matchningdata[i].anstallningstyp}</p>
-            <p>Läs mer: ${adHeadings.matchningslista.matchningdata[i].annonsid}</p>
+            <p>Läs mer: <a href="?jobAd=${adHeadings.matchningslista.matchningdata[i].annonsid}">HÄR</a></p>
         </div>
     `;
     headingOutput.insertAdjacentHTML('beforeend', adHeadingContainer);
@@ -76,5 +78,6 @@ function getAdFromURL() {
 if (location.search.split('jobAd=')[1]) {
     getAdFromURL()
 }
+
 
 /* HERMAN */
