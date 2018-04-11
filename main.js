@@ -18,6 +18,9 @@ fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?lanid=1&si
 
 function displayAdHeading(adHeadings) {
    	const headingOutput = document.getElementById('headingOutput');
+    const totalJobs = `<h2>${adHeadings.matchningslista.antal_platsannonser}</h2>`;
+    headingOutput.innerHTML = totalJobs;
+
 	for(let i = 0; i < adHeadings.matchningslista.matchningdata.length; i++){
     const adHeadingContainer = `
         <div id="adContainer">
@@ -31,8 +34,11 @@ function displayAdHeading(adHeadings) {
         </div>
     `;
     headingOutput.insertAdjacentHTML('beforeend', adHeadingContainer);
+    
 	}
+    
 }
+
 
 
 
