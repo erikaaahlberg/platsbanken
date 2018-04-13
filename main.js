@@ -44,17 +44,12 @@ function displayAdHeading(adHeadings) {
 
 /* HERMAN */
 
-function fetchSpecificAd(adID, view) {
+function fetchSpecificAd(adID) {
     fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${adID}`)
     .then((response) => response.json())
     .then((json) => {
         
-        if(view === 'savedView'){
-            console.log(json);
-            displayAdHeading(json, 'savedView');
-        }else{
          displaySpecificAd(json);
-        }
         
     })
     .catch((error) => {
@@ -135,8 +130,6 @@ function displaySavedAds(){
         let adID = savedAds[i];
         
         console.log('Sparat annonsid:', adID);
-        
-
     }  
 }
 
