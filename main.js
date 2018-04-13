@@ -25,14 +25,14 @@ function displayAdHeading(adHeadings) {
 
 	for(let i = 0; i < adHeadings.matchningslista.matchningdata.length; i++){
     const adHeadingContainer = `
-        <div id="adContainer">
+        <div id='adContainer'>
             <h2>${adHeadings.matchningslista.matchningdata[i].annonsrubrik}</h2>
             <p>Arbetsplats: ${adHeadings.matchningslista.matchningdata[i].arbetsplatsnamn}</p>
             <p>Kommun: ${adHeadings.matchningslista.matchningdata[i].kommunnamn}</p>
             <p>Sista ansökningsdag: ${adHeadings.matchningslista.matchningdata[i].sista_ansokningsdag}</p>
             <p>Yrke: ${adHeadings.matchningslista.matchningdata[i].yrkesbenamning}</p>
             <p>Anställningstyp: ${adHeadings.matchningslista.matchningdata[i].anstallningstyp}</p>
-            <p>Läs mer: <a href="?jobAd=${adHeadings.matchningslista.matchningdata[i].annonsid}">HÄR</a></p>
+            <p>Läs mer: <a href='?jobAd=${adHeadings.matchningslista.matchningdata[i].annonsid}'>HÄR</a></p>
         </div>
     `;
     headingOutput.insertAdjacentHTML('beforeend', adHeadingContainer);
@@ -57,7 +57,7 @@ function displaySpecificAd(object) {
     console.log(object);
     const mainOutput = document.getElementById('mainOutput');
     const adContainer = `
-        <div id="adContainer">
+        <div id='adContainer'>
             <h2>Rubrik: ${object.platsannons.annons.annonsrubrik}</h2>
             <p>Beskrivning: ${object.platsannons.annons.annonstext}</p>
             <p>Yrkesbenämning: ${object.platsannons.annons.yrkesbenamning}</p>
@@ -108,7 +108,7 @@ showSavedAdsButton.addEventListener('click', function(event){
 
 /* This displaySavedAds-function is under construction: */
 function displaySavedAds(){
-    console.log("Wow! Visa sparade annonser-button works!")
+    console.log('Wow! Visa sparade annonser-button works!')
     
     /* Getting array of saved adID's from local storage: */
     savedAds = JSON.parse(localStorage.getItem('savedAds'));
