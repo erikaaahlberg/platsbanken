@@ -1,9 +1,12 @@
+//Global variables
+var savedAds = [];
+const showSavedAdsButton = document.getElementById('showSavedAds');
+
 if (!location.search.split('jobAd=')[1]) {
-    getAdHeadings();
+    fetchAdHeadings();
 }
 
-
-function getAdHeadings() {
+function fetchAdHeadings() {
 fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?lanid=1&sida=1&antalrader=10')
         .then((response) => response.json())
         .then((adHeadings) => {
@@ -15,10 +18,9 @@ fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?lanid=1&si
 	})
 }
 
-
 function displayAdHeading(adHeadings) {
    	const headingOutput = document.getElementById('headingOutput');
-    const totalJobs = `<h2>${adHeadings.matchningslista.antal_platsannonser}</h2>`;
+    const totalJobs = `<h2>Totalt antal lediga tjänster: ${adHeadings.matchningslista.antal_platsannonser}</h2>`;
     headingOutput.innerHTML = totalJobs;
 
 	for(let i = 0; i < adHeadings.matchningslista.matchningdata.length; i++){
@@ -37,12 +39,6 @@ function displayAdHeading(adHeadings) {
     
 	} 
 }
-
-
-
-
-
-/* HERMAN */
 
 function fetchSpecificAd(adID) {
     fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${adID}`)
@@ -79,7 +75,7 @@ function displaySpecificAd(object) {
     `;
     mainOutput.innerHTML = adContainer;
     
-    const saveAdButton = document.getElementById(`saveAd${object.platsannons.annons.annonsid}`);
+     const saveAdButton = document.getElementById(`saveAd${object.platsannons.annons.annonsid}`);
     saveAdButton.addEventListener('click', function(event){
         event.preventDefault();
         saveAdToLocalStorage(this.value);  
@@ -87,20 +83,15 @@ function displaySpecificAd(object) {
     
 }
 
-function getAdFromURL() {
+function fetchAdFromURL() {
     const url = location.search.split('jobAd=')[1];
     fetchSpecificAd(url);
 }
 
 if (location.search.split('jobAd=')[1]) {
-    getAdFromURL()
+    fetchAdFromURL()
 }
 
-
-/* HERMAN */
-
-
-var savedAds = [];
 function saveAdToLocalStorage(id){
     if(!localStorage.getItem('savedAds')){
         localStorage.setItem('savedAds', JSON.stringify(savedAds));
@@ -110,8 +101,6 @@ function saveAdToLocalStorage(id){
     localStorage.setItem('savedAds', JSON.stringify(savedAds)); 
 }
 
-
-const showSavedAdsButton = document.getElementById('showSavedAds');
 showSavedAdsButton.addEventListener('click', function(event){
     event.preventDefault();
     displaySavedAds();
