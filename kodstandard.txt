@@ -1,0 +1,4 @@
+- Använd ' istället för "
+- 4 space indentering  
+- Inga förkortningar på namn
+- Beskrivande variabelnamn
