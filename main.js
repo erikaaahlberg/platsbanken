@@ -35,8 +35,7 @@ function displayAdHeading(adHeadings) {
     `;
     headingOutput.insertAdjacentHTML('beforeend', adHeadingContainer);
     
-	}
-    
+	} 
 }
 
 
@@ -45,13 +44,18 @@ function displayAdHeading(adHeadings) {
 
 /* HERMAN */
 
-function fetchSpecificAd(adID) {
+function fetchSpecificAd(adID, view) {
     fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${adID}`)
     .then((response) => response.json())
     .then((json) => {
         
+        if(view === 'savedView'){
+            console.log(json);
+            displayAdHeading(json, 'savedView');
+        }else{
          displaySpecificAd(json);
-   
+        }
+        
     })
     .catch((error) => {
         console.log(error);
@@ -110,14 +114,12 @@ function saveAdToLocalStorage(id){
     localStorage.setItem('savedAds', JSON.stringify(savedAds)); 
 }
 
+
 const showSavedAdsButton = document.getElementById('showSavedAds');
 showSavedAdsButton.addEventListener('click', function(event){
     event.preventDefault();
     displaySavedAds();
 });
-
-
-
 
 /* This displaySavedAds-function is under construction: */
 function displaySavedAds(){
@@ -126,16 +128,18 @@ function displaySavedAds(){
     /* Getting array of saved adID's from local storage: */
     savedAds = JSON.parse(localStorage.getItem('savedAds'));
     
+    //displayAdHeading(savedAds);
+    
     /* Looping out IDs */
     for(let i = 0; i < savedAds.length; i++){
         let adID = savedAds[i];
         
         console.log('Sparat annonsid:', adID);
         
-        
-        /* BUT WHAT WILL HAPPEN NEXT? :O */
-        //fetchSpecificAd(adID, 'savedView');
+
     }  
 }
+
+
 
 
