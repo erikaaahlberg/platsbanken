@@ -35,8 +35,7 @@ function displayAdHeading(adHeadings) {
     `;
     headingOutput.insertAdjacentHTML('beforeend', adHeadingContainer);
     
-	}
-    
+	} 
 }
 
 
@@ -49,7 +48,9 @@ function fetchSpecificAd(adID) {
     fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${adID}`)
     .then((response) => response.json())
     .then((json) => {
-        displaySpecificAd(json);
+        
+         displaySpecificAd(json);
+        
     })
     .catch((error) => {
         console.log(error);
@@ -57,6 +58,7 @@ function fetchSpecificAd(adID) {
 }
 
 function displaySpecificAd(object) {
+    console.log(object);
     const mainOutput = document.getElementById('mainOutput');
     const adContainer = `
         <div id="adContainer">
@@ -71,9 +73,18 @@ function displaySpecificAd(object) {
             <p>Omfattning: ${object.platsannons.villkor.arbetstid}</p>
             <p>Lön: ${object.platsannons.villkor.lonetyp}</p>
             <p>Dela: ${window.location.href}</p>
+            <button id="saveAd${object.platsannons.annons.annonsid}" value="${object.platsannons.annons.annonsid}">
+            Spara annons</button>
         </div>
     `;
     mainOutput.innerHTML = adContainer;
+    
+    const saveAdButton = document.getElementById(`saveAd${object.platsannons.annons.annonsid}`);
+    saveAdButton.addEventListener('click', function(event){
+        event.preventDefault();
+        saveAdToLocalStorage(this.value);  
+    });
+    
 }
 
 function getAdFromURL() {
@@ -86,3 +97,42 @@ if (location.search.split('jobAd=')[1]) {
 }
 
 /* HERMAN */
+
+
+var savedAds = [];
+function saveAdToLocalStorage(id){
+    if(!localStorage.getItem('savedAds')){
+        localStorage.setItem('savedAds', JSON.stringify(savedAds));
+    }
+    savedAds = JSON.parse(localStorage.getItem('savedAds'));
+    savedAds.push(id);
+    localStorage.setItem('savedAds', JSON.stringify(savedAds)); 
+}
+
+
+const showSavedAdsButton = document.getElementById('showSavedAds');
+showSavedAdsButton.addEventListener('click', function(event){
+    event.preventDefault();
+    displaySavedAds();
+});
+
+/* This displaySavedAds-function is under construction: */
+function displaySavedAds(){
+    console.log("Wow! Visa sparade annonser-button works!")
+    
+    /* Getting array of saved adID's from local storage: */
+    savedAds = JSON.parse(localStorage.getItem('savedAds'));
+    
+    //displayAdHeading(savedAds);
+    
+    /* Looping out IDs */
+    for(let i = 0; i < savedAds.length; i++){
+        let adID = savedAds[i];
+        
+        console.log('Sparat annonsid:', adID);
+    }  
+}
+
+
+
+
