@@ -2,3 +2,5 @@
 - 4 space indentering  
 - Inga förkortningar på namn
 - Beskrivande variabelnamn
+- Döp funktioner till fetch istället för get
+- Globala variabler längst upp
