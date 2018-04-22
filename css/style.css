@@ -1,0 +1,53 @@
+body{
+    background: rgb(255, 252, 241);
+    font-family: 'Cutive Mono', monospace;
+    font-size: 1.2em;
+}
+h1, h2, h3, h4 {
+    font-weight: 700;
+    font-size: 2em;
+    text-align: center;
+}
+
+button {
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+}
+
+#adContainer {
+    border: 1px solid rgb(46, 46, 46);
+    width: 80%;
+    margin: 20px auto;
+    padding: 30px;
+}
+
+#paginationContainer {
+    margin: auto;
+    text-align: center;
+}
+
+.firstLastButton {
+    letter-spacing: -3px;
+    font-size: 0.8em;
+}
+
+.activePaginationButton {
+    border-bottom: 3px solid red;
+}
+
+button#showSavedAds {
+    border: none;
+    outline: none;
+    background: rgb(166, 192, 16);
+    font-family: 'Cutive Mono', monospace;
+    padding: 10px 20px 10px 20px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 1.2em;
+    cursor: pointer;
+}
