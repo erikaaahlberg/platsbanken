@@ -31,6 +31,11 @@ button {
     text-align: center;
 }
 
+.firstLastButton {
+    letter-spacing: -3px;
+    font-size: 0.8em;
+}
+
 .activePaginationButton {
     border-bottom: 3px solid red;
 }
