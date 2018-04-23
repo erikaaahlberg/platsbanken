@@ -157,8 +157,32 @@ function displaySavedAds(){
         let adID = savedAds[i];
 
         console.log('Sparat annonsid:', adID);
+        fetchSpecificAd(adID);
     }
 }
+
+function fetchSpecificAd(adID) {
+    fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${adID}`)
+    .then((response) => response.json())
+    .then((json) => {
+
+        //console.log(json);
+         //displayAdHeadingsFromId(json);
+        
+        displaySpecificAd(json);
+
+    })
+    .catch((error) => {
+        console.log(error);
+    });
+}
+
+
+
+
+
+
+
 
 function paginate(pageNumber = 1) {
     currentPage = parseInt(pageNumber);

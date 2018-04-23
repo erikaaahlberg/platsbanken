@@ -8,20 +8,32 @@
     <title>Platsbanken API</title>
 </head>
 <body>
-    <div>
-        <button id="showSavedAds">Visa sparade annonser</button>
-
-        <form>
-            <input type="text" id="searchField" class="searchField" placeholder="Sök efter ett yrke">
-            <button id="searchButton">Sök</button>
-        </form>
+   
+      <div class="wrapper">
+       
+        <div class="left">
+           
+            <div id="headingOutput"></div>
+            <div id="mainOutput"></div>
+            <div id="totalJobsOutput"></div>
+            <div id="savedAdsOutput"></div>
+            
+        </div>
+        
+        <div class="right">   
+           
+            <button id="showSavedAds">Visa sparade annonser</button>
+            <form>
+                <input type="text" id="searchField" class="searchField" placeholder="Sök efter ett yrke">
+                <button id="searchButton">Sök</button>
+            </form>
+            
+        </div>
     </div>
 
-	<div id="headingOutput"></div>
+	
 
-    <div id="mainOutput"></div>
-    <div id="totalJobsOutput"></div>
-    <div id="savedAdsOutput"></div>
+
 
     <script src="main.js"></script>
 </body>
