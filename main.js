@@ -212,3 +212,25 @@ function fetchCareerSearch(id) {
         console.log(error);
     });
 }
+
+function fetchProfessionalCategories() {
+	fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/soklista/yrkesomraden')
+	.then((response) => response.json())
+	.then((categories) => {
+		console.log(categories);
+		displayProfessionalCategories(categories);
+	})
+	.catch((error) => {
+		console.log(error);
+	})
+}
+
+fetchProfessionalCategories();
+
+function displayProfessionalCategories(categories) {
+	let categoriesContainer = "";
+	for (let i = 0; i < categories.soklista.sokdata.length; i++ ) {
+		categoriesContainer += `<li data-id='${categories.soklista.sokdata[i].id}'>${categories.soklista.sokdata[i].namn}</li>`;
+	}
+	console.log(categoriesContainer);
+}
