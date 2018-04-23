@@ -1,6 +1,7 @@
 //Global variables
-let savedAds = [];
+//let savedAds = [];
 const showSavedAdsButton = document.getElementById('showSavedAds');
+const searchButton = document.getElementById('searchButton');
 let currentPage = 1;
 
 if (!location.search.split('jobAd=')[1]) {
@@ -11,7 +12,6 @@ function fetchAdHeadings() {
 fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?lanid=1&sida=1&antalrader=10')
         .then((response) => response.json())
         .then((adHeadings) => {
-            console.log(adHeadings)
 			displayAdHeading(adHeadings);
         })
         .catch((error) => {
@@ -54,6 +54,7 @@ function fetchSpecificAd(adID) {
     .then((response) => response.json())
     .then((json) => {
 
+        //console.log(json);
          displaySpecificAd(json);
 
     })
@@ -165,4 +166,49 @@ function paginate(pageNumber = 1) {
             .then((response) => response.json())
             .then((adHeadings) => displayAdHeading(adHeadings))
             .catch((error) => console.log(error))
+}
+
+
+searchButton.addEventListener('click', function(event){
+    event.preventDefault();
+    searchJob();
+});
+
+function searchJob(){
+    const searchField = document.getElementById('searchField');
+    let searchWord = searchField.value;
+    console.log(searchField.value);
+    
+    fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/soklista/yrken/${searchWord}`)
+    .then((response) => response.json())
+    .then((json) => {
+
+        let data = json.soklista.sokdata;
+        console.log(data);
+        
+        for(i = 0; i < data.length; i++){
+            //fetchSpecificAdSearch();
+//            console.log(data[i].id);
+//            console.log(data[i].namn);
+            fetchCareerSearch(data[i].id);
+        }
+
+    })
+    .catch((error) => {
+        console.log(error);
+    });
+}
+
+function fetchCareerSearch(id) {
+    fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?yrkesid=${id}&sida=1&antalrader=20`)
+    .then((response) => response.json())
+    .then((json) => {
+
+        console.log(json);
+        displayAdHeading(json);
+
+    })
+    .catch((error) => {
+        console.log(error);
+    });
 }
