@@ -245,14 +245,43 @@ function fetchProfessionalCategories() {
 	.then((response) => response.json())
 	.then((categories) => {
 		console.log(categories);
-		displayProfessionalCategories(categories);
+		//displayProfessionalCategories(categories);
+		for (let i = 0; i < categories.soklista.sokdata.length; i++ ) {
+			createOptionForSelector(categories.soklista.sokdata[i].id, categories.soklista.sokdata[i].namn, 'selectCategory', 'professionalCategory');
+		}
+		 const selector = document.getElementById('selectCategory');
+		selector.addEventListener('click', function() {
+			
+			let selectedIndex = selector.selectedIndex;
+			const id = document.getElementsByTagName('option')[selectedIndex].value;
+			console.log(id);
+			
+			fetchAllByProfessionalCategory(id);
+		})
 	})
 	.catch((error) => {
 		console.log(error);
 	})
 }
 
-function displayProfessionalCategories(categories) {
+function createOptionForSelector(optionValue, optionText, selectorId, optionClass) {
+    const selector = document.getElementById(selectorId);
+        const newOption = document.createElement('option');
+        newOption.text = optionText;
+        newOption.setAttribute('value', optionValue);
+		newOption.className = optionClass;
+        selector.add(newOption);
+		/*selector.addEventListener('click', function() {
+			
+			let selectedIndex = selector.selectedIndex;
+			const id = document.getElementsByTagName('option')[selectedIndex].value;
+			
+			fetchAllByProfessionalCategory(id);
+		})*/
+		//addEventlistenersToOptions(optionClass);
+}
+
+/*function displayProfessionalCategories(categories) {
 	let categoriesUl = document.getElementById('categoriesUl');
 	let categoriesContainer = '';
 	for (let i = 0; i < categories.soklista.sokdata.length; i++ ) {
@@ -260,23 +289,23 @@ function displayProfessionalCategories(categories) {
 	}
 	categoriesUl.innerHTML = categoriesContainer;
 	addEventlistenersToCategories();
-}
+}*/
 
-function addEventlistenersToCategories() {
-	let categories = document.getElementsByClassName('professionalCategory');
-	for (let category of categories) {
-		category.addEventListener('click', function() {
-            const id = this.dataset.id;
+/*function addEventlistenersToOptions(optionClass) {
+	let options = document.getElementsByClassName(optionClass);
+	for (let option of options) {
+		option.addEventListener('click', function() {
+            
 			fetchAllByProfessionalCategory(id);    
 		})
 	}
-}
+}*/
 function fetchAllByProfessionalCategory(id) {
 		fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?lanid=1&yrkesomradeid=${id}&sida=1&antalrader=20`)
 		.then((response) => response.json())
 		.then((adHeadings) => {
 			console.log(adHeadings);
-			displayAdHeading(adHeadings)
+			displayAdHeading(adHeadings);
 		})
 		.catch((error) => {
 			console.log(error);
