@@ -8,19 +8,25 @@
     <title>Platsbanken API</title>
 </head>
 <body>
-   
-      <div class="wrapper">
+    <main>
+        <header id = "topHeader">
+            <div id = "selectorsWrapper">
+                <select id = "selectQuantity">
+                </select>
+                <select id = "selectCounty">
+                </select>
+                <select id = "selectCategory">
+                </select>
+            </div>
+        </header>
+        <div class="wrapper">
        
-        <div class="left">
-           
-            <div id="headingOutput"></div>
-            <div id="mainOutput"></div>
-            <div id="totalJobsOutput"></div>
-            <div id="savedAdsOutput"></div>
+            <div class="left">
             
-        </div>
+
+        	</div>
         
-        <div class="right">   
+        	<div class="right">   
            
             <button id="showSavedAds">Visa sparade annonser</button>
             <form>
@@ -30,14 +36,25 @@
             <div class="categories">
             	<ul id="categoriesUl"></ul>
             </div>
+
+			<div id="headingOutput"></div>
+			<div id="mainOutput"></div>
+			<div id="totalJobsOutput"></div>
+			<div id="savedAdsOutput"></div>
+                
+            </div>
             
+            <div class="right">   
+
+            
+                <button id="showSavedAds">Visa sparade annonser</button>
+                <form>
+                    <input type="text" id="searchField" class="searchField" placeholder="Sök efter ett yrke">
+                    <button id="searchButton">Sök</button>
+                </form>
+            </div>
         </div>
-    </div>
-
-	
-
-
-
+    </main>
     <script src="main.js"></script>
 </body>
 </html>
