@@ -18,29 +18,61 @@ fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?lanid=1&si
             console.log(error)
 	})
 }
-
-function fetchByCounty(){
-    fetch('http://api.arbetsformedlingen.se/af/v0/arbetsformedling/soklista/lan')
+/*-------erika--------- */
+function fetchSearchList (searchParameter) {
+    return fetch(`http://api.arbetsformedlingen.se/af/v0/arbetsformedling/soklista/${searchParameter}`)
         .then((response) => response.json())
-            .then((adHeadings) => {
-                for (lan of adHeadings.soklista.sokdata) {
-                    createOptionForSelector(lan.id, lan.namn, 'selectCounty');
-                    console.log(lan.namn);
-                }
+            .then((searchList) => {
+                return searchList;
             })
                 .catch((error) => {
                     console.log(error);
                 })
 }
 
-/*function createOptionForSelector(optionValue, optionText, selectorId) {
+function fetchCountySearchList () {
+    fetchSearchList('lan').then((searchList) => {
+        for (lan of searchList.soklista.sokdata) {
+            createOptionForSelector(lan.id, lan.namn, 'selectCounty');
+            const selector = document.getElementById('selectCounty');
+            selector.addEventListener('change', function() {
+                const selectedId = getSelectedId(selector);
+                displaySelectedCounty(selectedId);
+            });
+        }
+    });
+}
+fetchCountySearchList();
+
+function createOptionForSelector(optionValue, optionText, selectorId, optionClass) {
     const selector = document.getElementById(selectorId);
         const newOption = document.createElement('option');
         newOption.text = optionText;
         newOption.setAttribute('value', optionValue);
+		newOption.className = optionClass;
         selector.add(newOption);
-}*/
-fetchByCounty();
+}
+
+function getSelectedId(selector) {
+        let selectedIndex = selector.selectedIndex;
+        const id = selector.value;
+        return id;
+}
+
+function displaySelectedCounty(countyId) {
+    fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?lanid=${countyId}&sida=1&antalrader=20`)
+        .then((response) => response.json())
+            .then((adHeadings) => {
+                displayAdHeading(adHeadings);
+            })
+                .catch((error) => {
+                    console.log(error);
+            });
+}
+
+
+//fetchByCounty();
+/*--------------- */
 
 function displayAdHeading(adHeadings) {
    	const headingOutput = document.getElementById('headingOutput');
@@ -288,14 +320,6 @@ function displayProfessionalCategories(categories) {
 		})
 }
 
-function createOptionForSelector(optionValue, optionText, selectorId, optionClass) {
-    const selector = document.getElementById(selectorId);
-        const newOption = document.createElement('option');
-        newOption.text = optionText;
-        newOption.setAttribute('value', optionValue);
-		newOption.className = optionClass;
-        selector.add(newOption);
-}
 
 function fetchAllByProfessionalCategory(id) {
 		fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?lanid=1&yrkesomradeid=${id}&sida=1&antalrader=20`)
