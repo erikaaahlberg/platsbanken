@@ -19,6 +19,29 @@ fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?lanid=1&si
 	})
 }
 
+function fetchByCounty(){
+    fetch('    http://api.arbetsformedlingen.se/af/v0/arbetsformedling/soklista/lan')
+        .then((response) => response.json())
+            .then((adHeadings) => {
+                for (lan of adHeadings.soklista.sokdata) {
+                    createOptionForSelector(lan.id, lan.namn, 'selectCounty');
+                    console.log(lan.namn);
+                }
+            })
+                .catch((error) => {
+                    console.log(error);
+                })
+}
+
+function createOptionForSelector(optionValue, optionText, selectorId) {
+    const selector = document.getElementById(selectorId);
+        const newOption = document.createElement('option');
+        newOption.text = optionText;
+        newOption.setAttribute('value', optionValue);
+        selector.add(newOption);
+}
+fetchByCounty();
+
 function displayAdHeading(adHeadings) {
    	const headingOutput = document.getElementById('headingOutput');
     const totalJobs = `<h2>Totalt antal lediga tjänster: ${adHeadings.matchningslista.antal_platsannonser}</h2>`;
