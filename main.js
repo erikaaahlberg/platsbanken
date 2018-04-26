@@ -267,7 +267,6 @@ function fetchProfessionalCategories() {
 	fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/soklista/yrkesomraden')
 	.then((response) => response.json())
 	.then((categories) => {
-		console.log(categories);
 		displayProfessionalCategories(categories);
 	})
 	.catch((error) => {
@@ -283,7 +282,6 @@ function displayProfessionalCategories(categories) {
 		selector.addEventListener('change', function() {
 			let selectedIndex = selector.selectedIndex;
 			const id = selector.value;
-			console.log(id);
 			fetchAllByProfessionalCategory(id);
 		})
 }
@@ -301,7 +299,6 @@ function fetchAllByProfessionalCategory(id) {
 		fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?lanid=1&yrkesomradeid=${id}&sida=1&antalrader=20`)
 		.then((response) => response.json())
 		.then((adHeadings) => {
-			console.log(adHeadings);
 			displayAdHeading(adHeadings);
 		})
 		.catch((error) => {
