@@ -20,7 +20,7 @@ fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?lanid=1&si
 }
 
 function fetchByCounty(){
-    fetch('    http://api.arbetsformedlingen.se/af/v0/arbetsformedling/soklista/lan')
+    fetch('http://api.arbetsformedlingen.se/af/v0/arbetsformedling/soklista/lan')
         .then((response) => response.json())
             .then((adHeadings) => {
                 for (lan of adHeadings.soklista.sokdata) {
@@ -33,13 +33,13 @@ function fetchByCounty(){
                 })
 }
 
-function createOptionForSelector(optionValue, optionText, selectorId) {
+/*function createOptionForSelector(optionValue, optionText, selectorId) {
     const selector = document.getElementById(selectorId);
         const newOption = document.createElement('option');
         newOption.text = optionText;
         newOption.setAttribute('value', optionValue);
         selector.add(newOption);
-}
+}*/
 fetchByCounty();
 
 function displayAdHeading(adHeadings) {
@@ -280,9 +280,9 @@ function displayProfessionalCategories(categories) {
 			createOptionForSelector(categories.soklista.sokdata[i].id, categories.soklista.sokdata[i].namn, 'selectCategory', 'professionalCategory');
 		}
 		const selector = document.getElementById('selectCategory');
-		selector.addEventListener('click', function() {
+		selector.addEventListener('change', function() {
 			let selectedIndex = selector.selectedIndex;
-			const id = document.getElementsByTagName('option')[selectedIndex].value;
+			const id = selector.value;
 			console.log(id);
 			fetchAllByProfessionalCategory(id);
 		})
