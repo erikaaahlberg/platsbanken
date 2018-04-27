@@ -4,17 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-<link href="https://fonts.googleapis.com/css?family=Bree+Serif|Open+Sans" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Bree+Serif|Open+Sans" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
     <title>Platsbanken API</title>
 </head>
+
 <body>
     <main>
-        <header id = "topHeader">
-                    
-           <div id=logo><img src="images/vit.png"></div>
-            <div id = "selectorsWrapper">
-                <select id = "selectQuantity">
+        <header id="topHeader">
+
+            <div id=logo><img src="images/vit.png"></div>
+            <div id="selectorsWrapper">
+                <select id="selectQuantity">
 
                 <option>ANTAL</option>
 
@@ -29,34 +30,33 @@
                     </option>
 
                 </select>
-                <select id = "selectCounty">
+                <select id="selectCounty">
                 <option>KOMMUN</option>
                 </select>
-                <select id = "selectCategory">
+                <select id="selectCategory">
                 <option>KATEGORI</option>
                 </select>
             </div>
         </header>
         <div class="wrapper">
-       
-            <div class="left">
-            	<div id="headingOutput"></div>
-				<div id="mainOutput"></div>
-				<div id="totalJobsOutput"></div>
-				<div id="savedAdsOutput"></div>
 
-        	</div>
-            
-            <div class="right">   
-            
+            <div class="left">
+                <div id="headingOutput"></div>
+                <div id="mainOutput"></div>
+                <div id="totalJobsOutput"></div>
+                <div id="savedAdsOutput"></div>
+
+            </div>
+
+            <div class="right">
                 <button id="showSavedAds">VISA SPARADE ANNONSER</button>
                 <form>
                     <input type="text" id="searchField" class="searchField" placeholder="Sök efter ett yrke">
                     <button id="searchButton">Sök</button>
                 </form>
                 <div class="categories">
-            	<ul id="categoriesUl"></ul>
-            </div>
+                    <ul id="categoriesUl"></ul>
+                </div>
 
             </div>
         </div>
