@@ -34,44 +34,67 @@ function fetchCountySearchList () {
     fetchSearchList('lan').then((searchList) => {
         for (lan of searchList.soklista.sokdata) {
             createOptionForSelector(lan.id, lan.namn, 'selectCounty');
-            const selector = document.getElementById('selectCounty');
-            selector.addEventListener('change', function() {
-                const selectedId = getSelectedId(selector);
-                displaySelectedCounty(selectedId);
+            const countySelector = document.getElementById('selectCounty');
+            countySelector.addEventListener('change', function() {
+                const selectedCountyId = getSelectedValue(countySelector);
+                fetchBySearchParameter(`lanid=${selectedCountyId}`, 10).then((ads) => {  
+                displayAdHeading(ads);
+                });
             });
         }
     });
 }
 fetchCountySearchList();
+displaySelectedAmount();
 
 function createOptionForSelector(optionValue, optionText, selectorId, optionClass) {
     const selector = document.getElementById(selectorId);
-        const newOption = document.createElement('option');
-        newOption.text = optionText;
-        newOption.setAttribute('value', optionValue);
-		newOption.className = optionClass;
-        selector.add(newOption);
+    const newOption = document.createElement('option');
+    newOption.text = optionText;
+    newOption.setAttribute('value', optionValue);
+	newOption.className = optionClass;
+    selector.add(newOption);
 }
 
-function getSelectedId(selector) {
-        let selectedIndex = selector.selectedIndex;
-        const id = selector.value;
-        return id;
+function getSelectedValue(selector) {
+    let selectedIndex = selector.selectedIndex;
+    const value = selector.value;
+    return value;
 }
 
-function displaySelectedCounty(countyId) {
-    fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?lanid=${countyId}&sida=1&antalrader=20`)
+function displaySelectedAmount () {
+    const quantitySelector = document.getElementById('selectQuantity');
+    quantitySelector.addEventListener('change', function() {
+        const selectedQuantity = getSelectedValue(quantitySelector);
+        fetchByQuantity(selectedQuantity).then((adHeadings) => {
+            displayAdHeading(adHeadings);
+        });
+    });
+}
+
+function fetchBySearchParameter(searchParameter) {
+    return fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?${searchParameter}&sida=1&antalrader=20`)
         .then((response) => response.json())
             .then((adHeadings) => {
-                displayAdHeading(adHeadings);
+                return adHeadings;
             })
                 .catch((error) => {
                     console.log(error);
             });
 }
 
+function fetchByQuantity (amount) {
+    return fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?lanid=1&sida=1&antalrader=${amount}`)
+    .then((response) => response.json())
+        .then((adHeadings) => {
+            console.log(adHeadings);
+            return adHeadings;
+        })
+            .catch((error) => {
+                console.log(error);
+        });
+}
 
-//fetchByCounty();
 /*--------------- */
 
 function displayAdHeading(adHeadings) {
