@@ -1,8 +1,9 @@
-body{
-    background: rgb(255, 252, 241);
-    font-family: 'Cutive Mono', monospace;
+body {
+    background: white;
+    font-family: 'Open Sans', sans-serif;
     font-size: 1.2em;
 }
+
 
 header#topHeader {
     position: -webkit-sticky;
@@ -13,16 +14,91 @@ header#topHeader {
     top: 0px;
 }
 
-.wrapper{
-    width: 100%;
-    display: grid;
-    grid-template-columns: 80% 20%;
+#logo {
+    display: flex;
+    justify-content: center;
+    
 }
 
-h1, h2, h3, h4 {
-    font-weight: 700;
+#logo img {
+    margin-top: 5%;
+    width: 40%;
+    height: 40%;
+
+}
+
+#selectorsWrapper {
+    display: flex;
+    justify-content: space-between;
+}
+
+select {
+    margin-top: 5%;
+    margin-bottom: 2%;
+    margin-left: 50px;
+    margin-right: 50px;
+    width: 100px;
+    height: 25px;
+    background-color: #2C4359;
+    /*#26323F dark blue*/
+    color: white;
+    border: none;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    box-shadow: 5px 5px 10px 0px rgba(0, 0, 0, 0.3);
+}
+
+
+.wrapper {
+    display: grid | inline-grid;
+    grid-template-areas: 'topHeader topHeader' 'left right ';
+    width: 100wh;
+    height: 100vh;
+    margin-top: 20px;
+}
+
+#topHeader {
+    grid-area: topHeader;
+    background-color: #2C4359;
+    width: 100%;
+    
+}
+
+
+.right {
+    grid-area: right;
+    margin-top: 20px;
+    border-top: solid #2C4359;
+    text-align: center;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap !important;
+    word-wrap: break-word;
+    white-space: normal;
+
+}
+
+.left {
+    grid-area: left;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap !important;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+
+
+
+h1,
+h2,
+h3,
+h4 {
+    font-weight: 900;
     font-size: 2em;
     text-align: center;
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
 }
 
 button {
@@ -36,11 +112,56 @@ button {
 }
 
 #adContainer {
-    border: 1px solid rgb(46, 46, 46);
-    width: 80%;
-    margin: 20px auto;
+    /*border: 1px solid rgb(46, 46, 46);*/
+    margin: 50px;
     padding: 30px;
+    background-color: white;
+    box-shadow: 5px 5px 10px 0px rgba(0, 0, 0, 0.3);
+    overflow-x: auto;
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap !important;
+    word-wrap: break-word;
+    white-space: normal;
 }
+
+
+#adContainer > h2 {
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+    font-size: 1.8em;
+    font-weight: 900;
+    text-align: left;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap !important;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+a {
+    color: #ED4D4D;
+}
+
+#headingOutput > h2 {
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+    font-size: 1em;
+    margin: 50px;
+    text-align: left;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap !important;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
+
+#adContainer > p {
+    overflow-x: auto;
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap !important;
+    word-wrap: break-word;
+    white-space: normal;
+}
+
 
 #paginationContainer {
     margin: auto;
@@ -57,13 +178,65 @@ button {
 }
 
 button#showSavedAds {
+    margin: 20px;
     border: none;
     outline: none;
-    background: rgb(166, 192, 16);
-    font-family: 'Cutive Mono', monospace;
-    padding: 10px 20px 10px 20px;
+    background: #ED4D4D;
+    color: white;
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+    padding: 10px 10px 10px 10px;
     border-radius: 10px;
-    font-weight: 700;
-    font-size: 1.2em;
+    font-weight: 500;
+    font-size: 0.4em;
     cursor: pointer;
+}
+
+#searchField{
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    padding: 5px 5px 5px 5px;
+}
+
+#searchButton {
+    background-color: #ED4D4D;
+    color: white;
+    padding: 8px 8px 8px 8px;
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 0.5em;
+    cursor: pointer;
+}
+
+
+@media screen and (min-width: 768px) {
+    .wrapper {
+        display: grid;
+    }
+
+    .right {
+        border-top: none;
+        border-left: solid #2C4359;
+        padding-left: 10px;
+    }
+    
+    select {
+    width: 150px;
+    }
+}
+
+@media screen and (min-width: 900px) {
+  select {
+    width: 170px;
+      
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    select {
+    width: 250px;
+    }
+    
 }
