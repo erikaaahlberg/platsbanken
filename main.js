@@ -18,26 +18,80 @@ fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?lanid=1&si
             console.log(error)
 	})
 }
+/*-------erika--------- */
+function fetchSearchList (searchParameter) {
+    return fetch(`http://api.arbetsformedlingen.se/af/v0/arbetsformedling/soklista/${searchParameter}`)
+        .then((response) => response.json())
+            .then((searchList) => {
+                return searchList;
+            })
+                .catch((error) => {
+                    console.log(error);
+                })
+}
+
+function fetchCountySearchList () {
+    fetchSearchList('lan').then((searchList) => {
+        for (lan of searchList.soklista.sokdata) {
+            createOptionForSelector(lan.id, lan.namn, 'selectCounty');
+            const selector = document.getElementById('selectCounty');
+            selector.addEventListener('change', function() {
+                const selectedId = getSelectedId(selector);
+                displaySelectedCounty(selectedId);
+            });
+        }
+    });
+}
+fetchCountySearchList();
+
+function createOptionForSelector(optionValue, optionText, selectorId, optionClass) {
+    const selector = document.getElementById(selectorId);
+        const newOption = document.createElement('option');
+        newOption.text = optionText;
+        newOption.setAttribute('value', optionValue);
+		newOption.className = optionClass;
+        selector.add(newOption);
+}
+
+function getSelectedId(selector) {
+        let selectedIndex = selector.selectedIndex;
+        const id = selector.value;
+        return id;
+}
+
+function displaySelectedCounty(countyId) {
+    fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?lanid=${countyId}&sida=1&antalrader=20`)
+        .then((response) => response.json())
+            .then((adHeadings) => {
+                displayAdHeading(adHeadings);
+            })
+                .catch((error) => {
+                    console.log(error);
+            });
+}
+
+
+//fetchByCounty();
+/*--------------- */
 
 function displayAdHeading(adHeadings) {
    	const headingOutput = document.getElementById('headingOutput');
     const totalJobs = `<h2>Totalt antal lediga tjänster: ${adHeadings.matchningslista.antal_platsannonser}</h2>`;
     headingOutput.innerHTML = totalJobs;
-
-	for(let i = 0; i < adHeadings.matchningslista.matchningdata.length; i++){
+	let ad = adHeadings.matchningslista.matchningdata;
+	for(let i = 0; i < ad.length; i++){
     const adHeadingContainer = `
         <div id='adContainer'>
-            <h2>${adHeadings.matchningslista.matchningdata[i].annonsrubrik}</h2>
-            <p>Arbetsplats: ${adHeadings.matchningslista.matchningdata[i].arbetsplatsnamn}</p>
-            <p>Kommun: ${adHeadings.matchningslista.matchningdata[i].kommunnamn}</p>
-            <p>Sista ansökningsdag: ${adHeadings.matchningslista.matchningdata[i].sista_ansokningsdag}</p>
-            <p>Yrke: ${adHeadings.matchningslista.matchningdata[i].yrkesbenamning}</p>
-            <p>Anställningstyp: ${adHeadings.matchningslista.matchningdata[i].anstallningstyp}</p>
-            <p>Läs mer: <a href='?jobAd=${adHeadings.matchningslista.matchningdata[i].annonsid}'>HÄR</a></p>
+            <h2>${ad[i].annonsrubrik}</h2>
+            <p>Arbetsplats: ${ad[i].arbetsplatsnamn}</p>
+            <p>Kommun: ${ad[i].kommunnamn}</p>
+            <p>Sista ansökningsdag: ${ad[i].sista_ansokningsdag}</p>
+            <p>Yrke: ${ad[i].yrkesbenamning}</p>
+            <p>Anställningstyp: ${ad[i].anstallningstyp}</p>
+            <p>Läs mer: <a href='?jobAd=${ad[i].annonsid}'>HÄR</a></p>
         </div>
-    `;
-    headingOutput.insertAdjacentHTML('beforeend', adHeadingContainer);
-
+		`;
+		headingOutput.insertAdjacentHTML('beforeend', adHeadingContainer);
 	}
     headingOutput.insertAdjacentHTML('beforeend', displayPagination(adHeadings.matchningslista));
     const paginationButtons = document.getElementsByClassName('paginationButton');
@@ -236,3 +290,43 @@ function fetchCareerSearch(id) {
         console.log(error);
     });
 }
+
+fetchProfessionalCategories();
+
+
+function fetchProfessionalCategories() {
+	fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/soklista/yrkesomraden')
+	.then((response) => response.json())
+	.then((categories) => {
+		displayProfessionalCategories(categories);
+	})
+	.catch((error) => {
+		console.log(error);
+	})
+}
+
+function displayProfessionalCategories(categories) {
+	for (let i = 0; i < categories.soklista.sokdata.length; i++ ) {
+			createOptionForSelector(categories.soklista.sokdata[i].id, categories.soklista.sokdata[i].namn, 'selectCategory', 'professionalCategory');
+		}
+		const selector = document.getElementById('selectCategory');
+		selector.addEventListener('change', function() {
+			let selectedIndex = selector.selectedIndex;
+			const id = selector.value;
+			fetchAllByProfessionalCategory(id);
+		})
+}
+
+
+function fetchAllByProfessionalCategory(id) {
+		fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?lanid=1&yrkesomradeid=${id}&sida=1&antalrader=20`)
+		.then((response) => response.json())
+		.then((adHeadings) => {
+			displayAdHeading(adHeadings);
+		})
+		.catch((error) => {
+			console.log(error);
+		});
+	}
+
+
