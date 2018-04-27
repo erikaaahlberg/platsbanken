@@ -17,12 +17,13 @@ header#topHeader {
 #logo {
     display: flex;
     justify-content: center;
+    
 }
 
 #logo img {
-    margin-top: 70px;
-    width: 30%;
-    height: 30%;
+    margin-top: 5%;
+    width: 40%;
+    height: 40%;
 
 }
 
@@ -32,9 +33,10 @@ header#topHeader {
 }
 
 select {
-    margin-top: 40px;
-    margin-left: 20px;
-    margin-right: 20px;
+    margin-top: 5%;
+    margin-bottom: 2%;
+    margin-left: 50px;
+    margin-right: 50px;
     width: 100px;
     height: 25px;
     background-color: #2C4359;
@@ -60,7 +62,7 @@ select {
     grid-area: topHeader;
     background-color: #2C4359;
     width: 100%;
-    height: 30vh;
+    
 }
 
 
@@ -219,37 +221,22 @@ button#showSavedAds {
         border-left: solid #2C4359;
         padding-left: 10px;
     }
-
-    #logo img {
-        margin-top: 80px;
-    }
-
+    
     select {
-        margin-top: 40px;
-        margin-left: 70px;
-        margin-right: 70px;
-
+    width: 150px;
     }
-
 }
 
 @media screen and (min-width: 900px) {
-    #logo img {
-        margin-top: 60px;
-        width: 40%;
-        height: 40%;
-    }
-
-    select {
-        margin-top: 50px;
-        width: 200px;
+  select {
+    width: 170px;
+      
     }
 }
 
 @media screen and (min-width: 1024px) {
-       #logo img {
-        width: 30%;
-        height: 30%;
+    select {
+    width: 250px;
     }
     
 }
