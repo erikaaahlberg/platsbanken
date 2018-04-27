@@ -190,7 +190,6 @@ button#showSavedAds {
 }
 
 #searchField {
-    color: white;
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
@@ -208,6 +207,7 @@ button#showSavedAds {
     font-size: 0.5em;
     cursor: pointer;
 }
+
 
 @media screen and (min-width: 768px) {
     .wrapper {
