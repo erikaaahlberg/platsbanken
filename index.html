@@ -14,9 +14,6 @@
                     
            <div id=logo><img src="images/vit.png"></div>
             <div id = "selectorsWrapper">
-                <label for = "selectQuantity">
-                    Välj antal annonser:
-                </label>
                 <select id = "selectQuantity">
 
                 <option>ANTAL</option>
@@ -32,15 +29,9 @@
                     </option>
 
                 </select>
-                <label for = "selectCounty">
-                    Välj län: 
-                </label>
                 <select id = "selectCounty">
                 <option>KOMMUN</option>
                 </select>
-                <label for = "selectCategory">
-                    Välj kategori:
-                </label>
                 <select id = "selectCategory">
                 <option>KATEGORI</option>
                 </select>
@@ -55,17 +46,6 @@
 				<div id="savedAdsOutput"></div>
 
         	</div>
-        
-        	<div class="right">   
-           
-            <button id="showSavedAds">Visa sparade annonser</button>
-            <form>
-                <input type="text" id="searchField" class="searchField" placeholder="Sök efter ett yrke">
-                <button id="searchButton">Sök</button>
-            </form>
-            <div class="categories">
-            	<ul id="categoriesUl"></ul>
-            </div>
             
             <div class="right">   
             
@@ -74,9 +54,11 @@
                     <input type="text" id="searchField" class="searchField" placeholder="Sök efter ett yrke">
                     <button id="searchButton">Sök</button>
                 </form>
+                <div class="categories">
+            	<ul id="categoriesUl"></ul>
+            </div>
 
             </div>
-          
         </div>
     </main>
     <script src="main.js"></script>
