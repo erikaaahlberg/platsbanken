@@ -3,7 +3,7 @@
 const showSavedAdsButton = document.getElementById('showSavedAds');
 const searchButton = document.getElementById('searchButton');
 let currentPage = 1;
-let paginateParams = {lanid: '1', antalrader: '10', yrkesomradeid: '', sida: '1'};
+let searchParams = {lanid: '1', antalrader: '10', yrkesomradeid: '', sida: '1'};
 
 if (!location.search.split('jobAd=')[1]) {
     fetchAdHeadings();
@@ -40,7 +40,7 @@ function fetchCountySearchList () {
                 const selectedCountyId = getSelectedValue(countySelector);
                 fetchBySearchParameter(`lanid=${selectedCountyId}`, 10).then((ads) => {
                 displayAdHeading(ads);
-                paginateParams.lanid = selectedCountyId;
+                searchParams.lanid = selectedCountyId;
                 });
             });
         }
@@ -70,7 +70,7 @@ function displaySelectedAmount () {
         const selectedQuantity = getSelectedValue(quantitySelector);
         fetchByQuantity(selectedQuantity).then((adHeadings) => {
             displayAdHeading(adHeadings);
-            paginateParams.antalrader = selectedQuantity;
+            searchParams.antalrader = selectedQuantity;
         });
     });
 }
@@ -124,6 +124,7 @@ function displayAdHeading(adHeadings) {
     for (let pageButton of paginationButtons) {
         pageButton.addEventListener('click', function() {
             const requestPage = this.getAttribute('data-page');
+            searchParams.sida = requestPage;
             paginate(requestPage);
         })
     }
@@ -263,14 +264,14 @@ function fetchSpecificAd(adID) {
 
 
 function constructUrlParameters(url) {
-    paginateParamKeys = ['lanid', 'antalrader', 'yrkesomradeid', 'sida'];
-    for (let i = 0; i < paginateParamKeys.length; i++) {
-        if (paginateParams[paginateParamKeys[i]]) {
+    searchParamKeys = ['lanid', 'antalrader', 'yrkesomradeid', 'sida'];
+    for (let i = 0; i < searchParamKeys.length; i++) {
+        if (searchParams[searchParamKeys[i]]) {
             if (i === 0) {
-                url += `${paginateParamKeys[i]}=${paginateParams[paginateParamKeys[i]]}`;
+                url += `${searchParamKeys[i]}=${searchParams[searchParamKeys[i]]}`;
             }
             else {
-                url += `&${paginateParamKeys[i]}=${paginateParams[paginateParamKeys[i]]}`;
+                url += `&${searchParamKeys[i]}=${searchParams[searchParamKeys[i]]}`;
             }
         }
     }
@@ -281,7 +282,7 @@ function paginate(pageNumber = 1) {
     currentPage = parseInt(pageNumber);
     let baseUrl = 'http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?';
     const baseUrlWithParams = constructUrlParameters(baseUrl);
-    fetch(`${baseUrlWithParams}${pageNumber}`)
+    fetch(`${baseUrlWithParams}`)
         .then((response) => response.json())
             .then((adHeadings) => displayAdHeading(adHeadings))
                 .catch((error) => console.log(error))
@@ -362,7 +363,7 @@ function fetchAllByProfessionalCategory(id) {
 		.then((response) => response.json())
 		.then((adHeadings) => {
 			displayAdHeading(adHeadings);
-            paginateParams.yrkesomradeid = id;
+            searchParams.yrkesomradeid = id;
 		})
 		.catch((error) => {
 			console.log(error);
