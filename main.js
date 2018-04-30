@@ -3,6 +3,7 @@
 const showSavedAdsButton = document.getElementById('showSavedAds');
 const searchButton = document.getElementById('searchButton');
 let currentPage = 1;
+let searchParams = {lanid: '1', antalrader: '10', yrkesomradeid: '', sida: '1'};
 
 if (!location.search.split('jobAd=')[1]) {
     fetchAdHeadings();
@@ -37,8 +38,9 @@ function fetchCountySearchList () {
             const countySelector = document.getElementById('selectCounty');
             countySelector.addEventListener('change', function() {
                 const selectedCountyId = getSelectedValue(countySelector);
-                fetchBySearchParameter(`lanid=${selectedCountyId}`, 10).then((ads) => {  
+                fetchBySearchParameter(`lanid=${selectedCountyId}`, 10).then((ads) => {
                 displayAdHeading(ads);
+                searchParams.lanid = selectedCountyId;
                 });
             });
         }
@@ -68,6 +70,7 @@ function displaySelectedAmount () {
         const selectedQuantity = getSelectedValue(quantitySelector);
         fetchByQuantity(selectedQuantity).then((adHeadings) => {
             displayAdHeading(adHeadings);
+            searchParams.antalrader = selectedQuantity;
         });
     });
 }
@@ -121,6 +124,7 @@ function displayAdHeading(adHeadings) {
     for (let pageButton of paginationButtons) {
         pageButton.addEventListener('click', function() {
             const requestPage = this.getAttribute('data-page');
+            searchParams.sida = requestPage;
             paginate(requestPage);
         })
     }
@@ -245,7 +249,7 @@ function fetchSpecificAd(adID) {
 
         //console.log(json);
          //displayAdHeadingsFromId(json);
-        
+
         displaySpecificAd(json);
 
     })
@@ -259,14 +263,29 @@ function fetchSpecificAd(adID) {
 
 
 
-
+function constructUrlParameters(url) {
+    searchParamKeys = ['lanid', 'antalrader', 'yrkesomradeid', 'sida'];
+    for (let i = 0; i < searchParamKeys.length; i++) {
+        if (searchParams[searchParamKeys[i]]) {
+            if (i === 0) {
+                url += `${searchParamKeys[i]}=${searchParams[searchParamKeys[i]]}`;
+            }
+            else {
+                url += `&${searchParamKeys[i]}=${searchParams[searchParamKeys[i]]}`;
+            }
+        }
+    }
+    return url;
+}
 
 function paginate(pageNumber = 1) {
     currentPage = parseInt(pageNumber);
-    fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?lanid=1&sida=${pageNumber}&antalrader=10`)
-            .then((response) => response.json())
+    let baseUrl = 'http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?';
+    const baseUrlWithParams = constructUrlParameters(baseUrl);
+    fetch(`${baseUrlWithParams}`)
+        .then((response) => response.json())
             .then((adHeadings) => displayAdHeading(adHeadings))
-            .catch((error) => console.log(error))
+                .catch((error) => console.log(error))
 }
 
 
@@ -279,14 +298,14 @@ function searchJob(){
     const searchField = document.getElementById('searchField');
     let searchWord = searchField.value;
     console.log(searchField.value);
-    
+
     fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/soklista/yrken/${searchWord}`)
     .then((response) => response.json())
     .then((json) => {
 
         let data = json.soklista.sokdata;
         console.log(data);
-        
+
         for(i = 0; i < data.length; i++){
             //fetchSpecificAdSearch();
 //            console.log(data[i].id);
@@ -304,10 +323,8 @@ function fetchCareerSearch(id) {
     fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?yrkesid=${id}&sida=1&antalrader=20`)
     .then((response) => response.json())
     .then((json) => {
-
         console.log(json);
         displayAdHeading(json);
-
     })
     .catch((error) => {
         console.log(error);
@@ -346,10 +363,9 @@ function fetchAllByProfessionalCategory(id) {
 		.then((response) => response.json())
 		.then((adHeadings) => {
 			displayAdHeading(adHeadings);
+            searchParams.yrkesomradeid = id;
 		})
 		.catch((error) => {
 			console.log(error);
 		});
 	}
-
-
