@@ -67,7 +67,7 @@ function searchJob() {
             .then((json) => {
                 let data = json.soklista.sokdata;
                 for (i = 0; i < data.length; i++) {
-                    fetchAdHeadings('yrkesid=' + data[i].id).then((adHeadings) => displayAdHeading(adHeadings));
+                    fetchAdHeadings('&yrkesid=' + data[i].id).then((adHeadings) => displayAdHeading(adHeadings));
                 }
             })
                 .catch((error) => console.log(error));
