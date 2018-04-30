@@ -4,16 +4,14 @@ const showSavedAdsButton = document.getElementById('showSavedAds');
 const searchButton = document.getElementById('searchButton');
 let searchParams = { lanid: '1', antalrader: '10', yrkesomradeid: '', sida: 1 };
 
-function fetchAdFromURL() {
-    const url = location.search.split('jobAd=')[1];
-    fetchSpecificAd(url);
-}
-
-if (!location.search.split('jobAd=')[1]) {
-    fetchAdHeadings().then((adHeadings) => displayAdHeading(adHeadings));
-}
-else {
-    fetchAdFromURL();
+function getUrl() {
+    if (!location.search.split('jobAd=')[1]) {
+        fetchAdHeadings().then((adHeadings) => displayAdHeading(adHeadings));
+    }
+    else {
+        const url = location.search.split('jobAd=')[1];
+        fetchSpecificAd(url);
+    }
 }
 
 function fetchAdHeadings() {
@@ -34,6 +32,7 @@ function fetchCountySearchList() {
             const countySelector = document.getElementById('selectCounty');
             countySelector.addEventListener('change', function() {
                 const selectedCountyId = getSelectedValue(countySelector);
+                searchParams.sida = 1;
                 searchParams.lanid = selectedCountyId;
                 fetchAdHeadings().then((ads) => displayAdHeading(ads));
             });
@@ -50,15 +49,8 @@ function getSelectedValue(selector) {
 function fetchSpecificAd(adID) {
     fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${adID}`)
         .then((response) => response.json())
-        .then((json) => displaySpecificAd(json))
-        .catch((error) => console.log(error));
-}
-
-function fetchSpecificAd(adID) {
-    fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${adID}`)
-        .then((response) => response.json())
             .then((json) => displaySpecificAd(json))
-                .catch((error) => console.log(error))
+                .catch((error) => console.log(error));
 }
 
 searchButton.addEventListener('click', function(event) {
@@ -72,44 +64,38 @@ function searchJob() {
 
     fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/soklista/yrken/${searchWord}`)
         .then((response) => response.json())
-        .then((json) => {
-            let data = json.soklista.sokdata;
-            for (i = 0; i < data.length; i++) {
-                fetchCareerSearch(data[i].id);
-            }
-        })
-        .catch((error) => console.log(error));
+            .then((json) => {
+                let data = json.soklista.sokdata;
+                for (i = 0; i < data.length; i++) {
+                    fetchCareerSearch(data[i].id);
+                }
+            })
+                .catch((error) => console.log(error));
 }
 
 function fetchCareerSearch(id) {
     fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?yrkesid=${id}&sida=1&antalrader=20`)
         .then((response) => response.json())
-        .then((json) => displayAdHeading(json))
-        .catch((error) => console.log(error));
+            .then((json) => displayAdHeading(json))
+                .catch((error) => console.log(error));
 }
 
 function fetchProfessionalCategories() {
     fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/soklista/yrkesomraden')
         .then((response) => response.json())
-        .then((categories) => {
-            displayProfessionalCategories(categories);
-        })
-        .catch((error) => console.log(error));
+            .then((categories) => displayProfessionalCategories(categories))
+                .catch((error) => console.log(error));
 }
 
 /* This displaySavedAds-function is under construction: */
 function displaySavedAds() {
     console.log('Wow! Visa sparade annonser-button works!')
-
     /* Getting array of saved adID's from local storage: */
     savedAds = JSON.parse(localStorage.getItem('savedAds'));
-
     //displayAdHeading(savedAds);
-
     /* Looping out IDs */
     for (let i = 0; i < savedAds.length; i++) {
         let adID = savedAds[i];
-
         console.log('Sparat annonsid:', adID);
         fetchSpecificAd(adID);
     }
@@ -122,6 +108,7 @@ function displayProfessionalCategories(categories) {
     const selector = document.getElementById('selectCategory');
     selector.addEventListener('change', function() {
         const id = selector.value;
+        searchParams.sida = 1;
         searchParams.yrkesomradeid = id;
         let selectedIndex = selector.selectedIndex;
         fetchAdHeadings().then((adHeadings) => displayAdHeading(adHeadings));
@@ -131,24 +118,30 @@ function displayProfessionalCategories(categories) {
 function displayPagination(items) {
     const firstPage = 1;
     const lastPage = items.antal_sidor;
+    console.log(lastPage);
     let paginationContainer = `
         <div id='paginationContainer'>
             <button type='button' class='paginationButton firstLastButton' data-page='${firstPage}'><<</button>`;
-    if (searchParams.sida > 1 && lastPage !== searchParams.sida) {
-        paginationContainer += `
-            <button type='button' class='paginationButton' data-page='${searchParams.sida - 1}'>${searchParams.sida - 1}</button>
-            <button type='button' class='paginationButton activePaginationButton' data-page='${searchParams.sida}'>${searchParams.sida}</button>
-            <button type='button' class='paginationButton' data-page='${searchParams.sida + 1}'>${searchParams.sida + 1}</button>`
-    } else if (searchParams.sida === lastPage) {
-        paginationContainer += `
-            <button type='button' class='paginationButton' data-page='${searchParams.sida - 2}'>${searchParams.sida - 2}</button>
-            <button type='button' class='paginationButton' data-page='${searchParams.sida - 1}'>${searchParams.sida - 1}</button>
-            <button type='button' class='paginationButton activePaginationButton' data-page='${searchParams.sida}'>${searchParams.sida}</button>`
-    } else {
-        paginationContainer += `
-            <button type='button' class='paginationButton activePaginationButton' data-page='${searchParams.sida}'>${searchParams.sida}</button>
-            <button type='button' class='paginationButton' data-page='${searchParams.sida + 1}'>${searchParams.sida + 1}</button>
-            <button type='button' class='paginationButton' data-page='${searchParams.sida + 2}'>${searchParams.sida + 2}</button>`
+    if (firstPage !== lastPage) {
+        if (searchParams.sida > 1 && lastPage !== searchParams.sida) {
+            paginationContainer += `
+                <button type='button' class='paginationButton' data-page='${searchParams.sida - 1}'>${searchParams.sida - 1}</button>
+                <button type='button' class='paginationButton activePaginationButton' data-page='${searchParams.sida}'>${searchParams.sida}</button>
+                <button type='button' class='paginationButton' data-page='${searchParams.sida + 1}'>${searchParams.sida + 1}</button>`
+        } else if (searchParams.sida === lastPage) {
+            paginationContainer += `
+                <button type='button' class='paginationButton' data-page='${searchParams.sida - 2}'>${searchParams.sida - 2}</button>
+                <button type='button' class='paginationButton' data-page='${searchParams.sida - 1}'>${searchParams.sida - 1}</button>
+                <button type='button' class='paginationButton activePaginationButton' data-page='${searchParams.sida}'>${searchParams.sida}</button>`
+        } else {
+            paginationContainer += `
+                <button type='button' class='paginationButton activePaginationButton' data-page='${searchParams.sida}'>${searchParams.sida}</button>
+                <button type='button' class='paginationButton' data-page='${searchParams.sida + 1}'>${searchParams.sida + 1}</button>
+                <button type='button' class='paginationButton' data-page='${searchParams.sida + 2}'>${searchParams.sida + 2}</button>`
+        }
+    }
+    else {
+        paginationContainer += `<button type='button' class='paginationButton activePaginationButton' data-page='${searchParams.sida}'>${searchParams.sida}</button>`
     }
     paginationContainer += `
             <button type='button' class='paginationButton firstLastButton' data-page='${lastPage}'>>></button>
@@ -188,10 +181,9 @@ function displaySelectedAmount() {
     const quantitySelector = document.getElementById('selectQuantity');
     quantitySelector.addEventListener('change', function() {
         const selectedQuantity = getSelectedValue(quantitySelector);
+        searchParams.sida = 1;
         searchParams.antalrader = selectedQuantity;
-        fetchAdHeadings().then((adHeadings) => {
-            displayAdHeading(adHeadings);
-        });
+        fetchAdHeadings().then((adHeadings) => displayAdHeading(adHeadings));
     });
 }
 
@@ -261,6 +253,7 @@ function createOptionForSelector(optionValue, optionText, selectorId, optionClas
     selector.add(newOption);
 }
 
+getUrl();
 fetchProfessionalCategories();
 fetchCountySearchList();
 displaySelectedAmount();
