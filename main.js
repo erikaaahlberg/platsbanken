@@ -14,10 +14,10 @@ function getUrl() {
     }
 }
 
-function fetchAdHeadings() {
+function fetchAdHeadings(parameter = '') {
     const baseUrl = 'http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?';
     const baseUrlWithParams = constructUrlParameters(baseUrl);
-    return fetch(`${baseUrlWithParams}`).then((response) => response.json());
+    return fetch(`${baseUrlWithParams + parameter}`).then((response) => response.json());
 }
 
 function fetchSearchList(searchParameter) {
@@ -67,16 +67,9 @@ function searchJob() {
             .then((json) => {
                 let data = json.soklista.sokdata;
                 for (i = 0; i < data.length; i++) {
-                    fetchCareerSearch(data[i].id);
+                    fetchAdHeadings('yrkesid=' + data[i].id).then((adHeadings) => displayAdHeading(adHeadings));
                 }
             })
-                .catch((error) => console.log(error));
-}
-
-function fetchCareerSearch(id) {
-    fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?yrkesid=${id}&sida=1&antalrader=20`)
-        .then((response) => response.json())
-            .then((json) => displayAdHeading(json))
                 .catch((error) => console.log(error));
 }
 
