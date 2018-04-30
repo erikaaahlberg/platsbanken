@@ -262,24 +262,26 @@ function fetchSpecificAd(adID) {
 
 
 
-
-
-function paginate(pageNumber = 1) {
-    currentPage = parseInt(pageNumber);
-    let baseURL = 'http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?';
+function constructUrlParameters(url) {
     paginateParamKeys = ['lanid', 'antalrader', 'yrkesomradeid', 'sida'];
     for (let i = 0; i < paginateParamKeys.length; i++) {
         if (paginateParams[paginateParamKeys[i]]) {
             if (i === 0) {
-                baseURL += `${paginateParamKeys[i]}=${paginateParams[paginateParamKeys[i]]}`;
+                url += `${paginateParamKeys[i]}=${paginateParams[paginateParamKeys[i]]}`;
             }
             else {
-                baseURL += `&${paginateParamKeys[i]}=${paginateParams[paginateParamKeys[i]]}`;
+                url += `&${paginateParamKeys[i]}=${paginateParams[paginateParamKeys[i]]}`;
             }
         }
-    };
-    console.log(baseURL);
-    fetch(`${baseURL}${pageNumber}`)
+    }
+    return url;
+}
+
+function paginate(pageNumber = 1) {
+    currentPage = parseInt(pageNumber);
+    let baseUrl = 'http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?';
+    const baseUrlWithParams = constructUrlParameters(baseUrl);
+    fetch(`${baseUrlWithParams}${pageNumber}`)
         .then((response) => response.json())
             .then((adHeadings) => displayAdHeading(adHeadings))
                 .catch((error) => console.log(error))
