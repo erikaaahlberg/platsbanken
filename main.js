@@ -39,7 +39,7 @@ class Fetch {
                     const selectedCountyId = getSelectedValue(countySelector);
                     searchParams.sida = 1;
                     searchParams.lanid = selectedCountyId;
-                    this.fetchAdHeadings().then((ads) => new Display().displayAdHeading(ads));
+                    this.fetchAdHeadings().then((ads) => initDisplay.displayAdHeading(ads));
                 });
             }
         });
@@ -48,7 +48,7 @@ class Fetch {
     fetchSpecificAd(adID) {
         fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${adID}`)
             .then((response) => response.json())
-                .then((json) => new Display().displaySpecificAd(json))
+                .then((json) => initDisplay.displaySpecificAd(json))
                     .catch((error) => console.log(error));
     }
 
@@ -61,7 +61,8 @@ class Fetch {
                 .then((json) => {
                     let data = json.soklista.sokdata;
                     for (i = 0; i < data.length; i++) {
-                        this.fetchAdHeadings('&yrkesid=' + data[i].id).then((adHeadings) => new Display().displayAdHeading(adHeadings));
+                        this.fetchAdHeadings('&yrkesid=' + data[i].id)
+                            .then((adHeadings) => initDisplay.displayAdHeading(adHeadings));
                     }
                 })
                     .catch((error) => console.log(error));
@@ -70,7 +71,7 @@ class Fetch {
     fetchProfessionalCategories() {
         fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/soklista/yrkesomraden')
             .then((response) => response.json())
-                .then((categories) => new Display().displayProfessionalCategories(categories))
+                .then((categories) => initDisplay.displayProfessionalCategories(categories))
                     .catch((error) => console.log(error));
     }
 }
@@ -86,7 +87,7 @@ class Display {
         for (let i = 0; i < savedAds.length; i++) {
             let adID = savedAds[i];
             console.log('Sparat annonsid:', adID);
-            new Fetch().fetchSpecificAd(adID);
+            initFetch.fetchSpecificAd(adID);
         }
     }
 
@@ -100,7 +101,7 @@ class Display {
             searchParams.sida = 1;
             searchParams.yrkesomradeid = id;
             let selectedIndex = selector.selectedIndex;
-            new Fetch().fetchAdHeadings().then((adHeadings) => this.displayAdHeading(adHeadings));
+            initFetch.fetchAdHeadings().then((adHeadings) => this.displayAdHeading(adHeadings));
         });
     }
 
@@ -171,7 +172,7 @@ class Display {
             const selectedQuantity = getSelectedValue(quantitySelector);
             searchParams.sida = 1;
             searchParams.antalrader = selectedQuantity;
-            new Fetch().fetchAdHeadings().then((adHeadings) => this.displayAdHeading(adHeadings));
+            initFetch.fetchAdHeadings().then((adHeadings) => this.displayAdHeading(adHeadings));
         });
     }
 
@@ -200,7 +201,7 @@ class Display {
             pageButton.addEventListener('click', () => {
                 const requestPage = pageButton.getAttribute('data-page');
                 searchParams.sida = parseInt(requestPage);
-                new Fetch().fetchAdHeadings().then((adHeadings) => this.displayAdHeading(adHeadings));
+                initFetch.fetchAdHeadings().then((adHeadings) => this.displayAdHeading(adHeadings));
             })
         }
     }
