@@ -2,6 +2,7 @@
 //let savedAds = [];
 const showSavedAdsButton = document.getElementById('showSavedAds');
 const searchButton = document.getElementById('searchButton');
+const inputSearchField = document.getElementById('searchField');
 let searchParams = { lanid: '1', antalrader: '10', yrkesomradeid: '', sida: 1 };
 
 class Fetch {
@@ -26,13 +27,13 @@ class Fetch {
         return fetch(`${baseUrlWithParams + parameter}`).then((response) => response.json());
     }
 
-    fetchSearchList(searchParameter) {
-        return fetch(`http://api.arbetsformedlingen.se/af/v0/arbetsformedling/soklista/${searchParameter}`)
+    fetchSearchList(searchSource, searchParameter) {
+        return fetch(`http://api.arbetsformedlingen.se/af/v0/${searchSource}/soklista/${searchParameter}`)
             .then((response) => response.json());
     }
 
     fetchCountySearchList() {
-        this.fetchSearchList('lan').then((searchList) => {
+        this.fetchSearchList('arbetsformedling', 'lan').then((searchList) => {
             for (let lan of searchList.soklista.sokdata) {
                 createOptionForSelector(lan.id, lan.namn, 'selectCounty');
                 const countySelector = document.getElementById('selectCounty');
@@ -262,3 +263,45 @@ initFetch.fetchCountySearchList();
 initDisplay.displaySelectedAmount();
 init.getUrl();
 init.eventListeners();
+
+
+
+inputSearchField.addEventListener('input', function(){
+    if (inputSearchField.value.length > 2) {
+        const searchWord = inputSearchField.value;
+        initFetch.fetchSearchList('platsannonser', `yrken/${searchWord}`).then((jobs) => {
+            displaySearchExamples(jobs);
+        })
+        .catch((error) => console.log(error));
+    }
+});
+
+function displaySearchExamples(jobs){
+    const parentElement = document.getElementById('searchJob');
+    const dropDownWrapper = document.createElement('div');
+    const dropDownList = document.createElement('ul');
+    const searchList = jobs.soklista.sokdata;
+    const searchListLength = jobs.soklista.sokdata.length;
+    for (let i = 0; i < searchListLength; i++) {
+        let adId = searchList[i].id;
+        let adTitle = searchList[i].namn;
+        let listItem = document.createElement('a');
+        listItem.setAttribute('id', adId);
+        listItem.innerHTML = adTitle;
+        /*dropDownList.innerHTML += `
+            <li id = "${searchList[i].id}">
+                ${searchList[i].namn}
+            </li>
+        `;*/
+        dropDownList.appendChild(listItem);
+        listItem.addEventListener('click', function(){
+            console.log(adId);
+            initFetch.fetchSpecificAd(adId).then((ad) => {
+                console.log(ad);
+            })
+            //initDisplay.displaySpecificAd(ad);
+        });
+    }
+    dropDownWrapper.appendChild(dropDownList);
+    parentElement.appendChild(dropDownWrapper);
+}
