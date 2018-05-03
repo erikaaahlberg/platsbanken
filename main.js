@@ -16,6 +16,7 @@ class Fetch {
                 }
             }
         }
+        console.log(url);
         return url;
     }
 
@@ -60,7 +61,7 @@ class Fetch {
             .then((response) => response.json())
                 .then((json) => {
                     let data = json.soklista.sokdata;
-                    for (i = 0; i < data.length; i++) {
+                    for (let i = 0; i < data.length; i++) {
                         this.fetchAdHeadings('&yrkesid=' + data[i].id)
                             .then((adHeadings) => initDisplay.displayAdHeading(adHeadings));
                     }
