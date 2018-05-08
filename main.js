@@ -2,11 +2,11 @@
 //let savedAds = [];
 const showSavedAdsButton = document.getElementById('showSavedAds');
 const searchButton = document.getElementById('searchButton');
-let searchParams = { lanid: '1', antalrader: '10', yrkesomradeid: '', sida: 1 };
+let searchParams = { lanid: '1', kommunid: '', antalrader: '10', yrkesomradeid: '', sida: 1 };
 
 class Fetch {
     constructUrlParameters(url) {
-        const searchParamKeys = ['lanid', 'antalrader', 'yrkesomradeid', 'sida'];
+        const searchParamKeys = ['lanid', 'kommunid', 'antalrader', 'yrkesomradeid', 'sida'];
         for (let i = 0; i < searchParamKeys.length; i++) {
             if (searchParams[searchParamKeys[i]]) {
                 if (i === 0) {
@@ -30,7 +30,12 @@ class Fetch {
         return fetch(`http://api.arbetsformedlingen.se/af/v0/arbetsformedling/soklista/${searchParameter}`)
             .then((response) => response.json());
     }
-
+	
+	fetchSearchListMunicipality(lanid) {
+        return fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/soklista/kommuner?lanid=${lanid}`)
+            .then((response) => response.json());
+    }
+	
     fetchCountySearchList() {
         this.fetchSearchList('lan').then((searchList) => {
             for (let lan of searchList.soklista.sokdata) {
@@ -40,6 +45,23 @@ class Fetch {
                     const selectedCountyId = getSelectedValue(countySelector);
                     searchParams.sida = 1;
                     searchParams.lanid = selectedCountyId;
+                    this.fetchAdHeadings().then((ads) => initDisplay.displayAdHeading(ads))
+					this.fetchMunicipalitySearchList(searchParams.lanid);
+                });
+            }
+        });
+    }
+	
+	fetchMunicipalitySearchList(lanid) {
+        this.fetchSearchListMunicipality(lanid).then((searchList) => {
+			console.log(searchList);
+            for (let municipality of searchList.soklista.sokdata) {
+                createOptionForSelector(municipality.id, municipality.namn, 'selectMunicipality');
+                const municipalitySelector = document.getElementById('selectMunicipality');
+                municipalitySelector.addEventListener('change', () => {
+                    const selectedMunicipalityId = getSelectedValue(municipalitySelector);
+                    searchParams.sida = 1;
+					searchParams.kommunid = selectedMunicipalityId;
                     this.fetchAdHeadings().then((ads) => initDisplay.displayAdHeading(ads));
                 });
             }
