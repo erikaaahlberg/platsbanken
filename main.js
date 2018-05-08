@@ -1,5 +1,5 @@
 //Global variables
-//let savedAds = [];
+let savedAds = [];
 const showSavedAdsButton = document.getElementById('showSavedAds');
 const searchButton = document.getElementById('searchButton');
 let searchParams = { lanid: '1', kommunid: '', antalrader: '10', yrkesomradeid: '', sida: 1 };
@@ -100,17 +100,27 @@ class Fetch {
 }
 
 class Display {
-    /* This displaySavedAds-function is under construction: */
     displaySavedAds() {
-        console.log('Wow! Visa sparade annonser-button works!')
-        /* Getting array of saved adID's from local storage: */
         savedAds = JSON.parse(localStorage.getItem('savedAds'));
-        //displayAdHeading(savedAds);
-        /* Looping out IDs */
+        headingOutput.innerHTML = '';
+        mainOutput.innerHTML = '';
+        
         for (let i = 0; i < savedAds.length; i++) {
-            let adID = savedAds[i];
-            console.log('Sparat annonsid:', adID);
-            initFetch.fetchSpecificAd(adID);
+            
+            let ad = savedAds[i].platsannons;
+            
+            const adHeadingContainer = `
+            <div id='adContainer'>
+                <h2>${ad.annons.annonsrubrik}</h2>
+                <p>Arbetsplats: ${ad.arbetsplats.arbetsplatsnamn}</p>
+                <p>Kommun: ${ad.annons.kommunnamn}</p>
+                <p>Sista ansökningsdag: ${ad.ansokan.sista_ansokningsdag}</p>
+                <p>Yrke: ${ad.annons.yrkesbenamning}</p>
+                <p>Anställningstyp: ${ad.annons.anstallningstyp}</p>
+                <p>Läs mer: <a href='?jobAd=${ad.annons.annonsid}'>HÄR</a></p>
+            </div>
+    		`;
+            headingOutput.insertAdjacentHTML('beforeend', adHeadingContainer);    
         }
     }
 
@@ -182,10 +192,12 @@ class Display {
             </div>
         `;
         mainOutput.innerHTML = adContainer;
+        
+        // maybe `value="${ad.annons.annonsid}"`in button.tag above could be removed...
 
         const saveAdButton = document.getElementById(`saveAd${ad.annons.annonsid}`);
         saveAdButton.addEventListener('click', () => {
-            saveAdToLocalStorage(saveAdButton.value);
+            saveAdToLocalStorage(item);
         });
     }
 

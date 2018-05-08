@@ -17,11 +17,12 @@ header#topHeader {
 #logo {
     display: flex;
     justify-content: center;
-    
+
 }
 
 #logo img {
     margin-top: 5%;
+    margin-bottom: 5%;
     width: 40%;
     height: 40%;
 
@@ -30,14 +31,13 @@ header#topHeader {
 #selectorsWrapper {
     display: flex;
     justify-content: space-between;
+    padding: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
 }
 
 select {
-    margin-top: 5%;
-    margin-bottom: 2%;
-    margin-left: 50px;
-    margin-right: 50px;
-    width: 100px;
+    width: 80px;
     height: 25px;
     background-color: #2C4359;
     /*#26323F dark blue*/
@@ -49,6 +49,34 @@ select {
     box-shadow: 5px 5px 10px 0px rgba(0, 0, 0, 0.3);
 }
 
+#searchField {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    padding: 5px 5px 5px 5px;
+    margin-right: 2%;
+}
+
+#searchButton {
+    background-color: #ED4D4D;
+    color: white;
+    padding: 8px 8px 8px 8px;
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 0.5em;
+    cursor: pointer;
+}
+
+#smallerScreenSearch {
+    display: flex;
+    justify-content: center;
+    margin-top: 5%;
+}
+
+#biggerScreenSearch {
+    display: none;
+}
 
 .wrapper {
     display: grid | inline-grid;
@@ -62,7 +90,7 @@ select {
     grid-area: topHeader;
     background-color: #2C4359;
     width: 100%;
-    
+
 }
 
 
@@ -87,8 +115,6 @@ select {
     word-wrap: break-word;
     white-space: normal;
 }
-
-
 
 
 h1,
@@ -191,52 +217,46 @@ button#showSavedAds {
     cursor: pointer;
 }
 
-#searchField{
-    -webkit-border-radius: 5px;
-    -moz-border-radius: 5px;
-    border-radius: 5px;
-    margin-bottom: 20px;
-    padding: 5px 5px 5px 5px;
-}
 
-#searchButton {
-    background-color: #ED4D4D;
-    color: white;
-    padding: 8px 8px 8px 8px;
-    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
-    border-radius: 10px;
-    font-weight: 500;
-    font-size: 0.5em;
-    cursor: pointer;
-}
 
 
 @media screen and (min-width: 768px) {
     .wrapper {
         display: grid;
     }
-
+    #smallerScreenSearch {
+        display: none;
+    }
+    #biggerScreenSearch {
+        display: contents;
+    }
+    #searchButton {}
+    #searchField {
+        width: 150px;
+    }
     .right {
         border-top: none;
         border-left: solid #2C4359;
         padding-left: 10px;
     }
-    
+
     select {
-    width: 150px;
+        width: 150px;
+        margin-right: 5%;
     }
 }
 
+
 @media screen and (min-width: 900px) {
-  select {
-    width: 170px;
-      
+    select {
+        width: 170px;
     }
+
 }
 
 @media screen and (min-width: 1024px) {
     select {
-    width: 250px;
+        width: 250px;
     }
-    
+
 }
