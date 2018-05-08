@@ -36,8 +36,21 @@
                 <select id="selectCategory">
                 <option>KATEGORI</option>
                 </select>
+
+                <form id="biggerScreenSearch">
+                    <input type="text" id="searchField" class="searchField" placeholder="Sök efter ett yrke">
+                    <button type="button" id="searchButton">Sök</button>
+                </form>
+
             </div>
+
         </header>
+
+        <form id="smallerScreenSearch">
+            <input type="text" id="searchField" class="searchField" placeholder="Sök efter ett yrke">
+            <button type="button" id="searchButton">Sök</button>
+        </form>
+
         <div class="wrapper">
 
             <div class="left">
@@ -50,10 +63,7 @@
 
             <div class="right">
                 <button id="showSavedAds">VISA SPARADE ANNONSER</button>
-                <form>
-                    <input type="text" id="searchField" class="searchField" placeholder="Sök efter ett yrke">
-                    <button type="button" id="searchButton">Sök</button>
-                </form>
+
                 <div class="categories">
                     <ul id="categoriesUl"></ul>
                 </div>
