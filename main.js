@@ -23,6 +23,7 @@ class Fetch {
     fetchAdHeadings(parameter = '') {
         const baseUrl = 'http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?';
         const baseUrlWithParams = this.constructUrlParameters(baseUrl);
+		console.log(baseUrlWithParams);
         return fetch(`${baseUrlWithParams + parameter}`).then((response) => response.json());
     }
 
@@ -30,7 +31,7 @@ class Fetch {
         return fetch(`http://api.arbetsformedlingen.se/af/v0/arbetsformedling/soklista/${searchParameter}`)
             .then((response) => response.json());
     }
-	
+	//Loka
 	fetchSearchListMunicipality(lanid) {
         return fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/soklista/kommuner?lanid=${lanid}`)
             .then((response) => response.json());
@@ -42,6 +43,7 @@ class Fetch {
                 createOptionForSelector(lan.id, lan.namn, 'selectCounty');
                 const countySelector = document.getElementById('selectCounty');
                 countySelector.addEventListener('change', () => {
+					searchParams.kommunid = '';
                     const selectedCountyId = getSelectedValue(countySelector);
                     searchParams.sida = 1;
                     searchParams.lanid = selectedCountyId;
@@ -53,12 +55,14 @@ class Fetch {
     }
 	
 	fetchMunicipalitySearchList(lanid) {
+		const municipalitySelector = document.getElementById('selectMunicipality');
+		municipalitySelector.innerHTML = '<option>KOMMUN</option>';
         this.fetchSearchListMunicipality(lanid).then((searchList) => {
-			console.log(searchList);
             for (let municipality of searchList.soklista.sokdata) {
                 createOptionForSelector(municipality.id, municipality.namn, 'selectMunicipality');
-                const municipalitySelector = document.getElementById('selectMunicipality');
-                municipalitySelector.addEventListener('change', () => {
+                
+                municipalitySelector.addEventListener('change', (event) => {
+					event.preventDefault();
                     const selectedMunicipalityId = getSelectedValue(municipalitySelector);
                     searchParams.sida = 1;
 					searchParams.kommunid = selectedMunicipalityId;
