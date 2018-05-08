@@ -39,8 +39,8 @@ class Fetch {
 	
     fetchCountySearchList() {
         this.fetchSearchList('lan').then((searchList) => {
-            for (let lan of searchList.soklista.sokdata) {
-                createOptionForSelector(lan.id, lan.namn, 'selectCounty');
+            for (let county of searchList.soklista.sokdata) {
+                createOptionForSelector(county.id, county.namn, 'selectCounty');
                 const countySelector = document.getElementById('selectCounty');
                 countySelector.addEventListener('change', () => {
 					searchParams.kommunid = '';
