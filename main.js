@@ -192,7 +192,6 @@ class Display {
         const saveAdButton = document.getElementById(`saveAd${ad.annons.annonsid}`);
         saveAdButton.addEventListener('click', () => {
             saveAdToLocalStorage(item);
-			alert('Annonsen har sparats.');
         });
     }
 
