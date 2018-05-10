@@ -108,7 +108,6 @@ class Display {
         savedAds = JSON.parse(localStorage.getItem('savedAds'));
         headingOutput.innerHTML = '';
         mainOutput.innerHTML = '';
-        
         for (let i = 0; i < savedAds.length; i++) {
             
             let ad = savedAds[i].platsannons;
@@ -191,7 +190,7 @@ class Display {
                 <p>Omfattning: ${ad.villkor.arbetstid}</p>
                 <p>Lön: ${ad.villkor.lonetyp}</p>
                 <p>Dela: ${window.location.href}</p>
-                <button type="button" id="saveAd${ad.annons.annonsid}" value="${ad.annons.annonsid}">
+                <button type="button" class='saveAdClass' id="saveAd${ad.annons.annonsid}" value="${ad.annons.annonsid}">
                 Spara annons</button>
             </div>
         `;
@@ -217,7 +216,7 @@ class Display {
 
     displayAdHeading(adHeadings) {
         const headingOutput = document.getElementById('headingOutput');
-        const totalJobs = `<h2>Totalt antal lediga tjänster: ${adHeadings.matchningslista.antal_platsannonser}</h2>`;
+        const totalJobs = `<div id="totalJobsWrapper"><h2>Totalt antal lediga tjänster: ${adHeadings.matchningslista.antal_platsannonser}</h2></div>`;
         headingOutput.innerHTML = totalJobs;
         let ad = adHeadings.matchningslista.matchningdata;
         for (let i = 0; i < ad.length; i++) {
@@ -248,8 +247,10 @@ class Display {
 
 class Init {
     eventListeners() {
+        const showSavedAdsWrapper = document.getElementById('showSavedAdsWrapper');
         showSavedAdsButton.addEventListener('click', function() {
             initDisplay.displaySavedAds();
+            showSavedAdsWrapper.remove();
         });
 
         searchButton.addEventListener('click', function() {

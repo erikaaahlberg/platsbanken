@@ -13,7 +13,7 @@
     <main>
         <header id="topHeader">
 
-            <div id=logo><img src="images/vit.png"></div>
+            <div id=logo onclick="window.location.href='http://127.0.0.1:57859/index.html'"><img src="images/vit.png"></div>
             <div id="selectorsWrapper">
                 <select id="selectQuantity">
 
@@ -48,7 +48,9 @@
             </div>
 
         </header>
-
+        <div id="showSavedAdsWrapper">
+        <button id="showSavedAds">VISA SPARADE ANNONSER</button>
+        </div>
         <form id="smallerScreenSearch">
             <input type="text" id="searchField" class="searchField" placeholder="Sök efter ett yrke">
             <button type="button" id="searchButton">Sök</button>
@@ -61,15 +63,6 @@
                 <div id="mainOutput"></div>
                 <div id="totalJobsOutput"></div>
                 <div id="savedAdsOutput"></div>
-
-            </div>
-
-            <div class="right">
-                <button id="showSavedAds">VISA SPARADE ANNONSER</button>
-
-                <div class="categories">
-                    <ul id="categoriesUl"></ul>
-                </div>
 
             </div>
         </div>
