@@ -282,6 +282,7 @@ function saveAdToLocalStorage(id) {
     savedAds = JSON.parse(localStorage.getItem('savedAds'));
     savedAds.push(id);
     localStorage.setItem('savedAds', JSON.stringify(savedAds));
+    alert('Du har lagt till tjänsten bland dina sparade annonser.')
 }
 
 const init = new Init();
