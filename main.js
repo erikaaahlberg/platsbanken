@@ -1,7 +1,7 @@
 //Global variables
 let savedAds = [];
-const showSavedAdsButton = document.getElementById('showSavedAds');
-const searchButton = document.getElementById('searchButton');
+//const showSavedAdsButton = document.getElementById('showSavedAds');
+//const searchButton = document.getElementById('searchButton');
 let searchParams = { lanid: '1', kommunid: '', antalrader: '10', yrkesomradeid: '', sida: 1 };
 
 class Fetch {
@@ -16,7 +16,6 @@ class Fetch {
                 }
             }
         }
-        console.log(url);
         return url;
     }
 
@@ -244,10 +243,11 @@ class Display {
 
 class Init {
     eventListeners() {
+		const showSavedAdsButton = document.getElementById('showSavedAds');
         showSavedAdsButton.addEventListener('click', function() {
             initDisplay.displaySavedAds();
         });
-
+		const searchButton = document.getElementById('searchButton');
         searchButton.addEventListener('click', function() {
             initFetch.searchJob();
         });
