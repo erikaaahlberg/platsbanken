@@ -1,7 +1,5 @@
 //Global variables
 let savedAds = [];
-//const showSavedAdsButton = document.getElementById('showSavedAds');
-//const searchButton = document.getElementById('searchButton');
 let searchParams = { lanid: '1', kommunid: '', antalrader: '10', yrkesomradeid: '', sida: 1 };
 
 class Fetch {
@@ -191,9 +189,6 @@ class Display {
             </div>
         `;
         mainOutput.innerHTML = adContainer;
-        
-        // maybe `value="${ad.annons.annonsid}"`in button.tag above could be removed...
-
         const saveAdButton = document.getElementById(`saveAd${ad.annons.annonsid}`);
         saveAdButton.addEventListener('click', () => {
             saveAdToLocalStorage(item);
