@@ -1,7 +1,5 @@
 //Global variables
 let savedAds = [];
-const showSavedAdsButton = document.getElementById('showSavedAds');
-const searchButton = document.getElementById('searchButton');
 let searchParams = { lanid: '1', kommunid: '', antalrader: '10', yrkesomradeid: '', sida: 1 };
 
 class Fetch {
@@ -16,7 +14,6 @@ class Fetch {
                 }
             }
         }
-        console.log(url);
         return url;
     }
 
@@ -31,7 +28,6 @@ class Fetch {
         return fetch(`http://api.arbetsformedlingen.se/af/v0/arbetsformedling/soklista/${searchParameter}`)
             .then((response) => response.json());
     }
-	//Loka
 	fetchSearchListMunicipality(lanid) {
         return fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/soklista/kommuner?lanid=${lanid}`)
             .then((response) => response.json());
@@ -39,18 +35,17 @@ class Fetch {
 	
     fetchCountySearchList() {
         this.fetchSearchList('lan').then((searchList) => {
+			const countySelector = document.getElementById('selectCounty');
             for (let county of searchList.soklista.sokdata) {
                 createOptionForSelector(county.id, county.namn, 'selectCounty');
-                const countySelector = document.getElementById('selectCounty');
-                countySelector.addEventListener('change', () => {
-					searchParams.kommunid = '';
-                    const selectedCountyId = getSelectedValue(countySelector);
-                    searchParams.sida = 1;
-                    searchParams.lanid = selectedCountyId;
-                    this.fetchAdHeadings().then((ads) => initDisplay.displayAdHeading(ads))
-					this.fetchMunicipalitySearchList(searchParams.lanid);
-                });
-            }
+			}
+			countySelector.addEventListener('change', () => {
+				const selectedCountyId = getSelectedValue(countySelector);
+				searchParams.sida = 1;
+				searchParams.lanid = selectedCountyId;
+				this.fetchAdHeadings().then((ads) => initDisplay.displayAdHeading(ads))
+				this.fetchMunicipalitySearchList(searchParams.lanid);
+			});
         });
     }
 	
@@ -60,15 +55,13 @@ class Fetch {
         this.fetchSearchListMunicipality(lanid).then((searchList) => {
             for (let municipality of searchList.soklista.sokdata) {
                 createOptionForSelector(municipality.id, municipality.namn, 'selectMunicipality');
-                
-                municipalitySelector.addEventListener('change', (event) => {
-					event.preventDefault();
-                    const selectedMunicipalityId = getSelectedValue(municipalitySelector);
-                    searchParams.sida = 1;
-					searchParams.kommunid = selectedMunicipalityId;
-                    this.fetchAdHeadings().then((ads) => initDisplay.displayAdHeading(ads));
-                });
-            }
+			}
+			municipalitySelector.addEventListener('change', (event) => {
+				event.preventDefault();
+				searchParams.kommunid = getSelectedValue(municipalitySelector);
+				searchParams.sida = 1;
+				this.fetchAdHeadings().then((ads) => initDisplay.displayAdHeading(ads));
+			});
         });
     }
 
@@ -195,9 +188,6 @@ class Display {
             </div>
         `;
         mainOutput.innerHTML = adContainer;
-        
-        // maybe `value="${ad.annons.annonsid}"`in button.tag above could be removed...
-
         const saveAdButton = document.getElementById(`saveAd${ad.annons.annonsid}`);
         saveAdButton.addEventListener('click', () => {
             saveAdToLocalStorage(item);
@@ -248,11 +238,12 @@ class Display {
 class Init {
     eventListeners() {
         const showSavedAdsWrapper = document.getElementById('showSavedAdsWrapper');
+		const showSavedAdsButton = document.getElementById('showSavedAds');
         showSavedAdsButton.addEventListener('click', function() {
             initDisplay.displaySavedAds();
             showSavedAdsWrapper.remove();
         });
-
+		const searchButton = document.getElementById('searchButton');
         searchButton.addEventListener('click', function() {
             initFetch.searchJob();
         });
