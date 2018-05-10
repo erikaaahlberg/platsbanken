@@ -32,8 +32,8 @@ header#topHeader {
     display: flex;
     justify-content: space-between;
     padding: 20px;
-    margin-left: 20px;
-    margin-right: 20px;
+    margin-left: 10px;
+    margin-right: 10px;
 }
 
 select {
@@ -47,6 +47,11 @@ select {
     -moz-border-radius: 5px;
     border-radius: 5px;
     box-shadow: 5px 5px 10px 0px rgba(0, 0, 0, 0.3);
+    overflow-x: auto;
+    white-space: pre-wrap;
+    white-space: -moz-pre-wrap !important;
+    word-wrap: break-word;
+    white-space: normal;
 }
 
 #searchField {
@@ -54,7 +59,8 @@ select {
     -moz-border-radius: 5px;
     border-radius: 5px;
     padding: 5px 5px 5px 5px;
-    margin-right: 2%;
+    width: 100px;
+    
 }
 
 #searchButton {
@@ -69,51 +75,46 @@ select {
 }
 
 #smallerScreenSearch {
-    display: flex;
-    justify-content: center;
+    float: left;
     margin-top: 5%;
+    margin-left: 5%;
+    width: 50%;
+    
 }
 
 #biggerScreenSearch {
     display: none;
 }
 
+#showSavedAdsWrapper {
+    float: right;
+    margin-top: 5%;
+    width: 40%;
+}
+
+button#showSavedAds {
+    border: none;
+    outline: none;
+    background: #ED4D4D;
+    color: white;
+    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
+    padding: 8px 8px 8px 8px;
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 0.4em;
+    cursor: pointer;
+}
+
 .wrapper {
-    display: grid | inline-grid;
-    grid-template-areas: 'topHeader topHeader' 'left right ';
     width: 100wh;
     height: 100vh;
     margin-top: 20px;
 }
 
 #topHeader {
-    grid-area: topHeader;
     background-color: #2C4359;
     width: 100%;
 
-}
-
-
-.right {
-    grid-area: right;
-    margin-top: 20px;
-    border-top: solid #2C4359;
-    text-align: center;
-    overflow-x: auto;
-    white-space: pre-wrap;
-    white-space: -moz-pre-wrap !important;
-    word-wrap: break-word;
-    white-space: normal;
-
-}
-
-.left {
-    grid-area: left;
-    overflow-x: auto;
-    white-space: pre-wrap;
-    white-space: -moz-pre-wrap !important;
-    word-wrap: break-word;
-    white-space: normal;
 }
 
 
@@ -137,9 +138,11 @@ button {
     outline: inherit;
 }
 
+
 #adContainer {
     /*border: 1px solid rgb(46, 46, 46);*/
     margin: 50px;
+    margin-top: 80px;
     padding: 30px;
     background-color: white;
     box-shadow: 5px 5px 10px 0px rgba(0, 0, 0, 0.3);
@@ -166,11 +169,18 @@ button {
 a {
     color: #ED4D4D;
 }
+#totalJobsWrapper{
+    margin-left: 50px;
+    margin-bottom: -20px;
+    border: solid white;
+    width: 100%;
+    margin-top: 10%;
+}
 
-#headingOutput > h2 {
+#totalJobsWrapper > h2 {
+    padding-top: 20px;
     font-family: Futura, "Trebuchet MS", Arial, sans-serif;
-    font-size: 1em;
-    margin: 50px;
+    font-size: 0.8em;
     text-align: left;
     overflow-x: auto;
     white-space: pre-wrap;
@@ -203,36 +213,28 @@ a {
     border-bottom: 3px solid red;
 }
 
-button#showSavedAds {
-    margin: 20px;
-    border: none;
-    outline: none;
-    background: #ED4D4D;
-    color: white;
-    font-family: Futura, "Trebuchet MS", Arial, sans-serif;
-    padding: 10px 10px 10px 10px;
-    border-radius: 10px;
-    font-weight: 500;
-    font-size: 0.4em;
-    cursor: pointer;
+.saveAdClass {
+     color: #ED4D4D;
+     border-bottom: 1px solid #ED4D4D;
+    
 }
 
 
 
-
 @media screen and (min-width: 768px) {
-    .wrapper {
-        display: grid;
-    }
     #smallerScreenSearch {
         display: none;
     }
     #biggerScreenSearch {
         display: contents;
     }
-    #searchButton {}
+    #searchButton {
+        margin-right: 5%;
+    }
     #searchField {
-        width: 150px;
+        margin-left: -2%;
+        width: 100px;
+        
     }
     .right {
         border-top: none;
@@ -244,12 +246,34 @@ button#showSavedAds {
         width: 150px;
         margin-right: 5%;
     }
+    
+
+    #totalJobsWrapper {
+    padding: none;
+    width: 40%;
+    height: 70px;
+    
+    
+}
+    #showSavedAdsWrapper {
+        width: 40%;
+        height: 70px;
+        margin-top: 10%;
+        margin-right: 50px;
+        padding-top:10px;
+}
+    #totalJobsWrapper > h2{
+        padding: 0px;
+    }
+    
+    
 }
 
 
 @media screen and (min-width: 900px) {
     select {
         width: 170px;
+        
     }
 
 }
@@ -258,5 +282,10 @@ button#showSavedAds {
     select {
         width: 250px;
     }
+    
+    #showSavedAdsWrapper {
+        margin-right: 25%;
+}
+    
 
 }
