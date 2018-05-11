@@ -240,7 +240,18 @@ class Init {
     eventListeners() {
 		const showSavedAdsButton = document.getElementById('showSavedAds');
         showSavedAdsButton.addEventListener('click', function() {
+            if(Storage.length === 0){
+                let wrapper = document.getElementById('wrapper');
+                wrapper.innerHTML = '';
+                const noSavedMessage = `
+                <div class="noSavedMessage">
+                    Du har inte sparat några annonser ännu.
+                </div>
+                `;
+                wrapper.insertAdjacentHTML('beforeend', noSavedMessage);
+            }else{
             initDisplay.displaySavedAds();
+            }
         });
 		const searchButton = document.getElementById('searchButton');
         searchButton.addEventListener('click', function() {
@@ -281,6 +292,7 @@ function saveAdToLocalStorage(id) {
     savedAds = JSON.parse(localStorage.getItem('savedAds'));
     savedAds.push(id);
     localStorage.setItem('savedAds', JSON.stringify(savedAds));
+    alert('Du har lagt till tjänsten bland dina sparade annonser.')
 }
 
 const init = new Init();
