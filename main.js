@@ -269,6 +269,8 @@ class Init {
         const inputSearchField = document.getElementById('searchField');
         console.log(inputSearchField);
         inputSearchField.addEventListener('input', function(){
+            
+            removeElement('dropDownWrapper');
             initFetch.fetchSweden()
             .then((jobAds) => {
                 let matchingTitles = [];
@@ -277,7 +279,7 @@ class Init {
                 }
                 if(matchingTitles && matchingTitles.length > 0) {
                     console.log(matchingTitles);
-                    //displayAutoComplete('biggerScreenSearch', matchingTitles);
+                    displayAutoComplete('biggerScreenSearch', matchingTitles);
                 }
             });
         });
@@ -343,10 +345,24 @@ function autoComplete (input, jobTitles){
     console.log(matchingTitles);
     return matchingTitles;
 }
+function clearElement (elementId){
+    const elementToClear = document.getElementById(elementId);
+    if (elementToClear) {
+        elementToClear.innerHTML = ``;
+    }
+}
+function removeElement (elementId){
+    const elementToReplace = document.getElementById(elementId);
+    if (elementToReplace){
+        elementToReplace.parentNode.removeChild(elementToReplace);
+    }
+}
 
 function displayAutoComplete(elementId, jobTitles){
     const parentElement = document.getElementById(elementId);
     const dropDownWrapper = document.createElement('div');
+    dropDownWrapper.setAttribute('id', 'dropDownWrapper');
+    dropDownWrapper.style.display = 'block';
     const dropDownList = document.createElement('ul');
     const lenghtOfArray = jobTitles.length;
     console.log(jobTitles);
