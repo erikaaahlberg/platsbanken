@@ -34,7 +34,7 @@ class Fetch {
     }
 	
     fetchCountySearchList() {
-        this.fetchSearchList('lan').then((searchList) => {
+        this.fetchSearchList('arbetsformedling', 'lan').then((searchList) => {
 			const countySelector = document.getElementById('selectCounty');
             for (let county of searchList.soklista.sokdata) {
                 createOptionForSelector(county.id, county.namn, 'selectCounty');
@@ -93,6 +93,15 @@ class Fetch {
             .then((response) => response.json())
                 .then((categories) => initDisplay.displayProfessionalCategories(categories))
                     .catch((error) => console.log(error));
+    }
+
+    fetchSweden(){
+        return fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?nyckelord=sverige&sida=1&antalrader=20')
+        .then((response) => response.json())
+            .then((jobAds) => {
+                return jobAds;
+            })
+                .catch((error) => console.log(error));    
     }
 }
 
@@ -257,6 +266,22 @@ class Init {
         searchButton.addEventListener('click', function() {
             initFetch.searchJob();
         });
+        const inputSearchField = document.getElementById('searchField');
+        console.log(inputSearchField);
+        inputSearchField.addEventListener('input', function(){
+            initFetch.fetchSweden()
+            .then((jobAds) => {
+                let matchingTitles = [];
+                if(inputSearchField.value.length > 2){
+                matchingTitles = autoComplete(inputSearchField.value, jobAds.matchningslista.matchningdata);
+                }
+                if(matchingTitles && matchingTitles.length > 0) {
+                    console.log(matchingTitles);
+                    //displayAutoComplete('biggerScreenSearch', matchingTitles);
+                }
+            });
+        });
+        
     }
 
     getUrl() {
@@ -305,39 +330,34 @@ init.getUrl();
 init.eventListeners();
 
 
-
-inputSearchField.addEventListener('input', function(){
-    if (inputSearchField.value.length > 2) {
-        const searchWord = inputSearchField.value;
-        initFetch.fetchSearchList('platsannonser', `yrken/${searchWord}`).then((jobs) => {
-                displaySearchExamples(jobs);
-        })
-        .catch((error) => console.log(error));
+function autoComplete (input, jobTitles){
+    let matchingTitles = [];
+    for (let i = 0; i < jobTitles.length; i++){
+        let jobTitle = jobTitles[i].annonsrubrik;
+        if (jobTitle.includes(input)) {
+            if (input != ''){
+                matchingTitles.push(jobTitles[i]);
+            }
+        }
     }
-    if (inputSearchField.value.length < 3) {
-        searchWord === '';
-    }
-});
+    console.log(matchingTitles);
+    return matchingTitles;
+}
 
-
-function displaySearchExamples(jobs){
-    const parentElement = document.getElementById('searchJob');
+function displayAutoComplete(elementId, jobTitles){
+    const parentElement = document.getElementById(elementId);
     const dropDownWrapper = document.createElement('div');
     const dropDownList = document.createElement('ul');
-    const searchList = jobs.soklista.sokdata;
-    const searchListLength = jobs.soklista.sokdata.length;
-    for (let i = 0; i < searchListLength; i++) {
-        let adId = searchList[i].id;
-        let adTitle = searchList[i].namn;
+    const lenghtOfArray = jobTitles.length;
+    console.log(jobTitles);
+    for (let i = 0; i < lenghtOfArray; i++) {
+        let adId = jobTitles[i].annonsid;
+        let adTitle = jobTitles[i].annonsrubrik;
+        console.log(adTitle);
         let listItem = document.createElement('a');
         listItem.setAttribute('id', adId);
         listItem.innerHTML = adTitle;
-        /*dropDownList.innerHTML += `
-            <li id = "${searchList[i].id}">
-                ${searchList[i].namn}
-            </li>
-        `;*/
-        dropDownList.appendChild(listItem);
+        console.log(listItem);
         listItem.addEventListener('click', function(){
             console.log(adId);
             initFetch.fetchSpecificAd(adId).then((ad) => {
@@ -345,6 +365,8 @@ function displaySearchExamples(jobs){
             })
             //initDisplay.displaySpecificAd(ad);
         });
+        dropDownList.appendChild(listItem);
+        //console.log(adHeadings[i].annonsrubrik);
     }
     dropDownWrapper.appendChild(dropDownList);
     parentElement.appendChild(dropDownWrapper);
