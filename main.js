@@ -240,7 +240,9 @@ class Init {
     eventListeners() {
 		const showSavedAdsButton = document.getElementById('showSavedAds');
         showSavedAdsButton.addEventListener('click', function() {
-            if(Storage.length === 0){
+            console.log(localStorage.savedAds);
+            if(!localStorage.savedAds){
+            //if(Storage.length === 0){
                 let wrapper = document.getElementById('wrapper');
                 wrapper.innerHTML = '';
                 const noSavedMessage = `
