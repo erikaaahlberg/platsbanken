@@ -1,13 +1,10 @@
 //Global variables
-//let savedAds = [];
-const showSavedAdsButton = document.getElementById('showSavedAds');
-const searchButton = document.getElementById('searchButton');
-const inputSearchField = document.getElementById('searchField');
-let searchParams = { lanid: '1', antalrader: '10', yrkesomradeid: '', sida: 1 };
+let savedAds = [];
+let searchParams = { lanid: '1', kommunid: '', antalrader: '10', yrkesomradeid: '', sida: 1 };
 
 class Fetch {
     constructUrlParameters(url) {
-        const searchParamKeys = ['lanid', 'antalrader', 'yrkesomradeid', 'sida'];
+        const searchParamKeys = ['lanid', 'kommunid', 'antalrader', 'yrkesomradeid', 'sida'];
         for (let i = 0; i < searchParamKeys.length; i++) {
             if (searchParams[searchParamKeys[i]]) {
                 if (i === 0) {
@@ -17,13 +14,13 @@ class Fetch {
                 }
             }
         }
-        console.log(url);
         return url;
     }
 
     fetchAdHeadings(parameter = '') {
         const baseUrl = 'http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?';
         const baseUrlWithParams = this.constructUrlParameters(baseUrl);
+		console.log(baseUrlWithParams);
         return fetch(`${baseUrlWithParams + parameter}`).then((response) => response.json());
     }
 
@@ -31,19 +28,40 @@ class Fetch {
         return fetch(`http://api.arbetsformedlingen.se/af/v0/${searchSource}/soklista/${searchParameter}`)
             .then((response) => response.json());
     }
-
+	fetchSearchListMunicipality(lanid) {
+        return fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/soklista/kommuner?lanid=${lanid}`)
+            .then((response) => response.json());
+    }
+	
     fetchCountySearchList() {
-        this.fetchSearchList('arbetsformedling', 'lan').then((searchList) => {
-            for (let lan of searchList.soklista.sokdata) {
-                createOptionForSelector(lan.id, lan.namn, 'selectCounty');
-                const countySelector = document.getElementById('selectCounty');
-                countySelector.addEventListener('change', () => {
-                    const selectedCountyId = getSelectedValue(countySelector);
-                    searchParams.sida = 1;
-                    searchParams.lanid = selectedCountyId;
-                    this.fetchAdHeadings().then((ads) => initDisplay.displayAdHeading(ads));
-                });
-            }
+        this.fetchSearchList('lan').then((searchList) => {
+			const countySelector = document.getElementById('selectCounty');
+            for (let county of searchList.soklista.sokdata) {
+                createOptionForSelector(county.id, county.namn, 'selectCounty');
+			}
+			countySelector.addEventListener('change', () => {
+				const selectedCountyId = getSelectedValue(countySelector);
+				searchParams.sida = 1;
+				searchParams.lanid = selectedCountyId;
+				this.fetchAdHeadings().then((ads) => initDisplay.displayAdHeading(ads))
+				this.fetchMunicipalitySearchList(searchParams.lanid);
+			});
+        });
+    }
+	
+	fetchMunicipalitySearchList(lanid) {
+		const municipalitySelector = document.getElementById('selectMunicipality');
+		municipalitySelector.innerHTML = '<option>KOMMUN</option>';
+        this.fetchSearchListMunicipality(lanid).then((searchList) => {
+            for (let municipality of searchList.soklista.sokdata) {
+                createOptionForSelector(municipality.id, municipality.namn, 'selectMunicipality');
+			}
+			municipalitySelector.addEventListener('change', (event) => {
+				event.preventDefault();
+				searchParams.kommunid = getSelectedValue(municipalitySelector);
+				searchParams.sida = 1;
+				this.fetchAdHeadings().then((ads) => initDisplay.displayAdHeading(ads));
+			});
         });
     }
 
@@ -79,17 +97,27 @@ class Fetch {
 }
 
 class Display {
-    /* This displaySavedAds-function is under construction: */
     displaySavedAds() {
-        console.log('Wow! Visa sparade annonser-button works!')
-        /* Getting array of saved adID's from local storage: */
         savedAds = JSON.parse(localStorage.getItem('savedAds'));
-        //displayAdHeading(savedAds);
-        /* Looping out IDs */
+        headingOutput.innerHTML = '';
+        mainOutput.innerHTML = '';
+        
         for (let i = 0; i < savedAds.length; i++) {
-            let adID = savedAds[i];
-            console.log('Sparat annonsid:', adID);
-            initFetch.fetchSpecificAd(adID);
+            
+            let ad = savedAds[i].platsannons;
+            
+            const adHeadingContainer = `
+            <div id='adContainer'>
+                <h2>${ad.annons.annonsrubrik}</h2>
+                <p>Arbetsplats: ${ad.arbetsplats.arbetsplatsnamn}</p>
+                <p>Kommun: ${ad.annons.kommunnamn}</p>
+                <p>Sista ansökningsdag: ${ad.ansokan.sista_ansokningsdag}</p>
+                <p>Yrke: ${ad.annons.yrkesbenamning}</p>
+                <p>Anställningstyp: ${ad.annons.anstallningstyp}</p>
+                <p>Läs mer: <a href='?jobAd=${ad.annons.annonsid}'>HÄR</a></p>
+            </div>
+    		`;
+            headingOutput.insertAdjacentHTML('beforeend', adHeadingContainer);    
         }
     }
 
@@ -161,10 +189,9 @@ class Display {
             </div>
         `;
         mainOutput.innerHTML = adContainer;
-
         const saveAdButton = document.getElementById(`saveAd${ad.annons.annonsid}`);
         saveAdButton.addEventListener('click', () => {
-            saveAdToLocalStorage(saveAdButton.value);
+            saveAdToLocalStorage(item);
         });
     }
 
@@ -211,10 +238,22 @@ class Display {
 
 class Init {
     eventListeners() {
+		const showSavedAdsButton = document.getElementById('showSavedAds');
         showSavedAdsButton.addEventListener('click', function() {
+            if(Storage.length === 0){
+                let wrapper = document.getElementById('wrapper');
+                wrapper.innerHTML = '';
+                const noSavedMessage = `
+                <div class="noSavedMessage">
+                    Du har inte sparat några annonser ännu.
+                </div>
+                `;
+                wrapper.insertAdjacentHTML('beforeend', noSavedMessage);
+            }else{
             initDisplay.displaySavedAds();
+            }
         });
-
+		const searchButton = document.getElementById('searchButton');
         searchButton.addEventListener('click', function() {
             initFetch.searchJob();
         });
@@ -253,6 +292,7 @@ function saveAdToLocalStorage(id) {
     savedAds = JSON.parse(localStorage.getItem('savedAds'));
     savedAds.push(id);
     localStorage.setItem('savedAds', JSON.stringify(savedAds));
+    alert('Du har lagt till tjänsten bland dina sparade annonser.')
 }
 
 const init = new Init();
