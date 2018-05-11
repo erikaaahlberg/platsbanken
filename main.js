@@ -270,11 +270,15 @@ inputSearchField.addEventListener('input', function(){
     if (inputSearchField.value.length > 2) {
         const searchWord = inputSearchField.value;
         initFetch.fetchSearchList('platsannonser', `yrken/${searchWord}`).then((jobs) => {
-            displaySearchExamples(jobs);
+                displaySearchExamples(jobs);
         })
         .catch((error) => console.log(error));
     }
+    if (inputSearchField.value.length < 3) {
+        searchWord === '';
+    }
 });
+
 
 function displaySearchExamples(jobs){
     const parentElement = document.getElementById('searchJob');
