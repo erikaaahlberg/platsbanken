@@ -20,79 +20,78 @@ class Fetch {
     fetchAdHeadings(parameter = '') {
         const baseUrl = 'http://api.arbetsformedlingen.se/af/v0/platsannonser/matchning?';
         const baseUrlWithParams = this.constructUrlParameters(baseUrl);
-		console.log(baseUrlWithParams);
-        return fetch(`${baseUrlWithParams + parameter}`).then((response) => response.json());
+        return fetch(baseUrlWithParams + parameter).then((response) => response.json());
     }
 
     fetchSearchList(searchParameter) {
         return fetch(`http://api.arbetsformedlingen.se/af/v0/arbetsformedling/soklista/${searchParameter}`)
             .then((response) => response.json());
     }
-	fetchSearchListMunicipality(lanid) {
+    fetchSearchListMunicipality(lanid) {
         return fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/soklista/kommuner?lanid=${lanid}`)
             .then((response) => response.json());
     }
-	
+
     fetchCountySearchList() {
         this.fetchSearchList('lan').then((searchList) => {
-			const countySelector = document.getElementById('selectCounty');
+            const countySelector = document.getElementById('selectCounty');
             for (let county of searchList.soklista.sokdata) {
-                createOptionForSelector(county.id, county.namn, 'selectCounty');
-			}
-			countySelector.addEventListener('change', () => {
-				const selectedCountyId = getSelectedValue(countySelector);
-				searchParams.sida = 1;
-				searchParams.lanid = selectedCountyId;
-				this.fetchAdHeadings().then((ads) => initDisplay.displayAdHeading(ads))
-				this.fetchMunicipalitySearchList(searchParams.lanid);
-			});
+                initDisplay.createOptionForSelector(county.id, county.namn, 'selectCounty');
+            }
+            countySelector.addEventListener('change', () => {
+                const selectedCountyId = getSelectedValue(countySelector);
+                searchParams.sida = 1;
+                searchParams.lanid = selectedCountyId;
+                this.fetchAdHeadings().then((ads) => initDisplay.displayAdHeading(ads))
+                this.fetchMunicipalitySearchList(searchParams.lanid);
+            });
         });
     }
-	
-	fetchMunicipalitySearchList(lanid) {
-		const municipalitySelector = document.getElementById('selectMunicipality');
-		municipalitySelector.innerHTML = '<option>KOMMUN</option>';
+
+    fetchMunicipalitySearchList(lanid) {
+        const municipalitySelector = document.getElementById('selectMunicipality');
+        municipalitySelector.innerHTML = '<option>KOMMUN</option>';
         this.fetchSearchListMunicipality(lanid).then((searchList) => {
             for (let municipality of searchList.soklista.sokdata) {
-                createOptionForSelector(municipality.id, municipality.namn, 'selectMunicipality');
-			}
-			municipalitySelector.addEventListener('change', (event) => {
-				event.preventDefault();
-				searchParams.kommunid = getSelectedValue(municipalitySelector);
-				searchParams.sida = 1;
-				this.fetchAdHeadings().then((ads) => initDisplay.displayAdHeading(ads));
-			});
+                initDisplay.createOptionForSelector(municipality.id, municipality.namn, 'selectMunicipality');
+            }
+            municipalitySelector.addEventListener('change', (event) => {
+                event.preventDefault();
+                searchParams.kommunid = getSelectedValue(municipalitySelector);
+                searchParams.sida = 1;
+                this.fetchAdHeadings().then((ads) => initDisplay.displayAdHeading(ads));
+            });
         });
     }
 
     fetchSpecificAd(adID) {
         fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/${adID}`)
             .then((response) => response.json())
-                .then((json) => initDisplay.displaySpecificAd(json))
-                    .catch((error) => console.log(error));
+            .then((json) => initDisplay.displaySpecificAd(json))
+            .catch((error) => console.log(error));
     }
 
     searchJob() {
         const searchField = document.getElementById('searchField');
-        let searchWord = searchField.value;
+        const searchWord = searchField.value;
 
         fetch(`http://api.arbetsformedlingen.se/af/v0/platsannonser/soklista/yrken/${searchWord}`)
             .then((response) => response.json())
-                .then((json) => {
-                    let data = json.soklista.sokdata;
-                    for (let i = 0; i < data.length; i++) {
-                        this.fetchAdHeadings('&yrkesid=' + data[i].id)
-                            .then((adHeadings) => initDisplay.displayAdHeading(adHeadings));
-                    }
-                })
-                    .catch((error) => console.log(error));
+            .then((json) => {
+                const data = json.soklista.sokdata;
+                for (let i = 0; i < data.length; i++) {
+                    this.fetchAdHeadings('&yrkesid=' + data[i].id)
+                        .then((adHeadings) => initDisplay.displayAdHeading(adHeadings));
+                }
+            })
+            .catch((error) => console.log(error));
     }
 
     fetchProfessionalCategories() {
         fetch('http://api.arbetsformedlingen.se/af/v0/platsannonser/soklista/yrkesomraden')
             .then((response) => response.json())
-                .then((categories) => initDisplay.displayProfessionalCategories(categories))
-                    .catch((error) => console.log(error));
+            .then((categories) => initDisplay.displayProfessionalCategories(categories))
+            .catch((error) => console.log(error));
     }
 }
 
@@ -101,11 +100,8 @@ class Display {
         savedAds = JSON.parse(localStorage.getItem('savedAds'));
         headingOutput.innerHTML = '';
         mainOutput.innerHTML = '';
-        
         for (let i = 0; i < savedAds.length; i++) {
-            
             let ad = savedAds[i].platsannons;
-            
             const adHeadingContainer = `
             <div id='adContainer'>
                 <h2>${ad.annons.annonsrubrik}</h2>
@@ -117,20 +113,20 @@ class Display {
                 <p>Läs mer: <a href='?jobAd=${ad.annons.annonsid}'>HÄR</a></p>
             </div>
     		`;
-            headingOutput.insertAdjacentHTML('beforeend', adHeadingContainer);    
+            headingOutput.insertAdjacentHTML('beforeend', adHeadingContainer);
         }
     }
 
     displayProfessionalCategories(categories) {
         for (let i = 0; i < categories.soklista.sokdata.length; i++) {
-            createOptionForSelector(categories.soklista.sokdata[i].id, categories.soklista.sokdata[i].namn, 'selectCategory', 'professionalCategory');
+            initDisplay.createOptionForSelector(categories.soklista.sokdata[i].id, categories.soklista.sokdata[i].namn, 'selectCategory', 'professionalCategory');
         }
         const selector = document.getElementById('selectCategory');
         selector.addEventListener('change', () => {
             const id = selector.value;
             searchParams.sida = 1;
             searchParams.yrkesomradeid = id;
-            let selectedIndex = selector.selectedIndex;
+            const selectedIndex = selector.selectedIndex;
             initFetch.fetchAdHeadings().then((adHeadings) => this.displayAdHeading(adHeadings));
         });
     }
@@ -158,8 +154,7 @@ class Display {
                     <button type='button' class='paginationButton' data-page='${searchParams.sida + 1}'>${searchParams.sida + 1}</button>
                     <button type='button' class='paginationButton' data-page='${searchParams.sida + 2}'>${searchParams.sida + 2}</button>`
             }
-        }
-        else {
+        } else {
             paginationContainer += `<button type='button' class='paginationButton activePaginationButton' data-page='${searchParams.sida}'>${searchParams.sida}</button>`
         }
         paginationContainer += `
@@ -209,7 +204,7 @@ class Display {
         const headingOutput = document.getElementById('headingOutput');
         const totalJobs = `<h2>Totalt antal lediga tjänster: ${adHeadings.matchningslista.antal_platsannonser}</h2>`;
         headingOutput.innerHTML = totalJobs;
-        let ad = adHeadings.matchningslista.matchningdata;
+        const ad = adHeadings.matchningslista.matchningdata;
         for (let i = 0; i < ad.length; i++) {
             const adHeadingContainer = `
             <div id='adContainer'>
@@ -234,13 +229,22 @@ class Display {
             })
         }
     }
+
+    createOptionForSelector(optionValue, optionText, selectorId, optionClass) {
+        const selector = document.getElementById(selectorId);
+        const newOption = document.createElement('option');
+        newOption.text = optionText;
+        newOption.setAttribute('value', optionValue);
+        newOption.className = optionClass;
+        selector.add(newOption);
+    }
 }
 
 class Init {
     eventListeners() {
-		const showSavedAdsButton = document.getElementById('showSavedAds');
+        const showSavedAdsButton = document.getElementById('showSavedAds');
         showSavedAdsButton.addEventListener('click', function() {
-            if(Storage.length === 0){
+            if (Storage.length === 0) {
                 let wrapper = document.getElementById('wrapper');
                 wrapper.innerHTML = '';
                 const noSavedMessage = `
@@ -249,11 +253,12 @@ class Init {
                 </div>
                 `;
                 wrapper.insertAdjacentHTML('beforeend', noSavedMessage);
-            }else{
-            initDisplay.displaySavedAds();
+            } else {
+                initDisplay.displaySavedAds();
             }
         });
-		const searchButton = document.getElementById('searchButton');
+
+        const searchButton = document.getElementById('searchButton');
         searchButton.addEventListener('click', function() {
             initFetch.searchJob();
         });
@@ -262,25 +267,15 @@ class Init {
     getUrl() {
         if (!location.search.split('jobAd=')[1]) {
             initFetch.fetchAdHeadings().then((adHeadings) => initDisplay.displayAdHeading(adHeadings));
-        }
-        else {
+        } else {
             const url = location.search.split('jobAd=')[1];
             initFetch.fetchSpecificAd(url);
         }
     }
 }
 
-function createOptionForSelector(optionValue, optionText, selectorId, optionClass) {
-    const selector = document.getElementById(selectorId);
-    const newOption = document.createElement('option');
-    newOption.text = optionText;
-    newOption.setAttribute('value', optionValue);
-    newOption.className = optionClass;
-    selector.add(newOption);
-}
-
 function getSelectedValue(selector) {
-    let selectedIndex = selector.selectedIndex;
+    const selectedIndex = selector.selectedIndex;
     const value = selector.value;
     return value;
 }
