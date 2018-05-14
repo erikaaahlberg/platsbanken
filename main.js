@@ -184,6 +184,7 @@ class Display {
                 Spara annons</button>
             </div>
         `;
+		headingOutput.innerHTML = '';
         mainOutput.innerHTML = adContainer;
         const saveAdButton = document.getElementById(`saveAd${ad.annons.annonsid}`);
         saveAdButton.addEventListener('click', () => {
@@ -202,6 +203,7 @@ class Display {
     }
 
     displayAdHeading(adHeadings) {
+		mainOutput.innerHTML = '';
         const headingOutput = document.getElementById('headingOutput');
         const totalJobs = `<h2>Totalt antal lediga tjänster: ${adHeadings.matchningslista.antal_platsannonser}</h2>`;
         headingOutput.innerHTML = totalJobs;
