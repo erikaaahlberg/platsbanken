@@ -117,7 +117,7 @@ class Display {
                 <p>Läs mer: <a href='?jobAd=${ad.annons.annonsid}'>HÄR</a></p>
             </div>
     		`;
-            headingOutput.insertAdjacentHTML('beforeend', adHeadingContainer);    
+            headingOutput.insertAdjacentHTML('afterbegin', adHeadingContainer);    
         }
     }
 
@@ -242,15 +242,15 @@ class Init {
         showSavedAdsButton.addEventListener('click', function() {
             console.log(localStorage.savedAds);
             if(!localStorage.savedAds){
-            //if(Storage.length === 0){
-                let wrapper = document.getElementById('wrapper');
-                wrapper.innerHTML = '';
-                const noSavedMessage = `
-                <div class="noSavedMessage">
-                    Du har inte sparat några annonser ännu.
-                </div>
-                `;
-                wrapper.insertAdjacentHTML('beforeend', noSavedMessage);
+                alert('Du har inga sparade annonser');
+//                let wrapper = document.getElementById('wrapper');
+//                wrapper.innerHTML = '';
+//                const noSavedMessage = `
+//                <div class="noSavedMessage">
+//                    Du har inte sparat några annonser ännu.
+//                </div>
+//                `;
+//                wrapper.insertAdjacentHTML('beforeend', noSavedMessage);
             }else{
             initDisplay.displaySavedAds();
             }
